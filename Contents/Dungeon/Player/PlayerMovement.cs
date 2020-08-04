@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+namespace JHchoi.Contents
 {
-    private float moveH, moveV;
-    [SerializeField] private float moveSpeed = 1.0f;
-
-
-    private void FixedUpdate()
+    public class PlayerMovement : MonoBehaviour
     {
-        moveH = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-        moveV = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+        private float moveH, moveV;
+        [SerializeField] private float moveSpeed = 1.0f;
 
-        this.gameObject.transform.Translate(new Vector3(moveH, moveV));
 
-        Vector2 direction = new Vector2(moveH, moveV);
-        FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+        private void FixedUpdate()
+        {
+            moveH = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+            moveV = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
+            this.gameObject.transform.Translate(new Vector3(moveH, moveV));
+
+            Vector2 direction = new Vector2(moveH, moveV);
+            FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+
+
+        }
     }
-
 }

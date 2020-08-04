@@ -3,66 +3,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+namespace JHchoi.Contents
 {
-    public GameObject tempObj;
-    private Animator anim;
-    public string[] staticDirections = { "Static N", "Static NW", "Static W", "Static SW", "Static S", "Static SE", "Static E", "Static NE" };
-    public string[] runDirections = { "Run N", "Run NW", "Run W", "Run SW", "Run S", "Run SE", "Run E", "Run NE" };
-    int lastDirection;
-
-    private void Awake()
+    public class PlayerAnimation : MonoBehaviour
     {
-        anim = GetComponent<Animator>();
-    }
+        public GameObject tempObj;
+        private Animator anim;
+        public string[] staticDirections = { "Static N", "Static NW", "Static W", "Static SW", "Static S", "Static SE", "Static E", "Static NE" };
+        public string[] runDirections = { "Run N", "Run NW", "Run W", "Run SW", "Run S", "Run SE", "Run E", "Run NE" };
+        int lastDirection;
+        bool isAtkPossible = true;
 
-    public void SetDirection(Vector2 _dir)
-    {
-        string[] directionArray = null;
+        public GameObject obj;
+        GameObject[] objs = new GameObject[10];
 
-        if (_dir.magnitude < 0.01)
+
+        private void Awake()
         {
-            directionArray = staticDirections;
-        }
-        else
-        {
-            directionArray = runDirections;
-            lastDirection = DirectionToIndex(_dir);
+            anim = GetComponent<Animator>();
         }
 
-        anim.Play(directionArray[lastDirection]);
-
-        if (Input.GetKeyDown(KeyCode.Z))
+        public void SetDirection(Vector2 _dir)
         {
-            Attack(_dir);
+            string[] directionArray = null;
+
+            if (_dir.magnitude < 0.01)
+            {
+                directionArray = staticDirections;
+            }
+            else
+            {
+                directionArray = runDirections;
+                lastDirection = DirectionToIndex(_dir);
+            }
+
+            anim.Play(directionArray[lastDirection]);
+
+            if (Input.GetKeyDown(KeyCode.Z) && isAtkPossible)
+            {
+                StartCoroutine(AttackDelay());
+                Attack(lastDirection);
+            }
+
         }
-    }
 
-    private int DirectionToIndex(Vector2 _dir)
-    {
-        Vector2 norDir = _dir.normalized;
-        float step = 360 / 8;
-        float offset = step / 2;
-        float angle = Vector2.SignedAngle(Vector2.up, norDir);
-        angle += offset;
-
-        if (angle < 0)
+        private int DirectionToIndex(Vector2 _dir)
         {
-            angle += 360;
+            Vector2 norDir = _dir.normalized;
+            float step = 360 / 8;
+            float offset = step / 2;
+            float angle = Vector2.SignedAngle(Vector2.up, norDir);
+            angle += offset;
+
+            if (angle < 0)
+            {
+                angle += 360;
+            }
+
+            float stepCount = angle / step;
+            return Mathf.FloorToInt(stepCount);
+        }
+        int i = 0;
+
+        private void Attack(int _lastDir)
+        {
+            objs[i] = Instantiate(obj) as GameObject;
+            objs[i].transform.localPosition = transform.position;
+            objs[i].name = i.ToString();
+            objs[i].GetComponent<FireCircle>().CreateFireCircle(10, 10);
+            objs[i].GetComponent<FireCircle>().ShootMagic(_lastDir);
+            i++;
         }
 
-        float stepCount = angle / step;
-        return Mathf.FloorToInt(stepCount);
-    }
+        IEnumerator AttackDelay()
+        {
+            isAtkPossible = false;
+            yield return 5f;
+            isAtkPossible = true;
+        }
 
-    private void Attack(Vector2 dir)
-    {
-        Vector2 norDir = dir.normalized;
-        GameObject obj = Instantiate(tempObj);
-        obj.transform.position = this.gameObject.transform.position;
-        obj.GetComponent<Rigidbody2D>().AddForce(norDir * 100f);
-
-
-        Debug.Log("공격");
     }
 }
