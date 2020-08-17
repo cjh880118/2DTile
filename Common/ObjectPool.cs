@@ -46,14 +46,14 @@ namespace JHchoi.Common
 			}
 
 			go.SetActive(true);
-			go.transform.SetParent(null);
+			//go.transform.SetParent(null);
 
 			return go;
 		}
 
 		public void PoolObject(GameObject go)
 		{
-			go.transform.SetParent(transform);
+			//go.transform.SetParent(transform);
 			go.SetActive(false);
 
 			_pool.Enqueue(go);
@@ -71,7 +71,7 @@ namespace JHchoi.Common
 		{
 			var go = Instantiate<GameObject>(prefab);
 			go.SetActive(false);
-			go.transform.SetParent(transform);
+			//go.transform.SetParent(transform);
 
 			if (onCreateObject != null)
 				onCreateObject(go);

@@ -7,7 +7,6 @@ namespace JHchoi.Contents
 {
     public class PlayerAnimation : MonoBehaviour
     {
-        public GameObject tempObj;
         private Animator anim;
         public string[] staticDirections = { "Static N", "Static NW", "Static W", "Static SW", "Static S", "Static SE", "Static E", "Static NE" };
         public string[] runDirections = { "Run N", "Run NW", "Run W", "Run SW", "Run S", "Run SE", "Run E", "Run NE" };
@@ -23,28 +22,22 @@ namespace JHchoi.Contents
             anim = GetComponent<Animator>();
         }
 
-        public void SetDirection(Vector2 _dir)
+        public void SetDirection(Vector2 intput)
         {
             string[] directionArray = null;
 
-            if (_dir.magnitude < 0.01)
+            if (intput.magnitude < 0.01)
             {
                 directionArray = staticDirections;
             }
             else
             {
                 directionArray = runDirections;
-                lastDirection = DirectionToIndex(_dir);
+                lastDirection = DirectionToIndex(intput);
             }
 
             anim.Play(directionArray[lastDirection]);
-
-            if (Input.GetKeyDown(KeyCode.Z) && isAtkPossible)
-            {
-                StartCoroutine(AttackDelay());
-                Attack(lastDirection);
-            }
-
+          
         }
 
         private int DirectionToIndex(Vector2 _dir)
@@ -63,24 +56,6 @@ namespace JHchoi.Contents
             float stepCount = angle / step;
             return Mathf.FloorToInt(stepCount);
         }
-        int i = 0;
-
-        private void Attack(int _lastDir)
-        {
-            objs[i] = Instantiate(obj) as GameObject;
-            objs[i].transform.localPosition = transform.position;
-            objs[i].name = i.ToString();
-            objs[i].GetComponent<FireCircle>().CreateFireCircle(10, 10);
-            objs[i].GetComponent<FireCircle>().ShootMagic(_lastDir);
-            i++;
-        }
-
-        IEnumerator AttackDelay()
-        {
-            isAtkPossible = false;
-            yield return 5f;
-            isAtkPossible = true;
-        }
-
+      
     }
 }

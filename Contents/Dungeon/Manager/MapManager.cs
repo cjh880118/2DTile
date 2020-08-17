@@ -2,43 +2,72 @@
 using System.Collections.Generic;
 using UnityEngine;
 using JHchoi.Constants;
+using JHchoi.Contents;
+using System;
+using JHchoi.Models;
+using JHchoi.UI.Event;
 
 namespace JHchoi.Managers
 {
     public class MapManager : IManager
     {
-        public override IEnumerator Load_Resource()
+        MapModel mapModel = Model.First<MapModel>();
+        private GameObject mapObject;
+        private MapType nowMap;
+        private bool isLoadComplete;
+        public MapType NowMap { get => nowMap; set => nowMap = value; }
+        public bool IsLoadComplete { get => isLoadComplete; set => isLoadComplete = value; }
+
+        public override IEnumerator Load_Resource(string name)
         {
-            string path = "Map/Desert/Desert_Map";
+            isLoadComplete = false;
+            ClearMap();
+
+            string path = "Prefabs/Map/" + name;
             yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
             {
-                var WorldMap = Instantiate(o) as GameObject;
-                WorldMap.transform.parent = transform;
-                WorldMap.name = "World_Map";
-                gameObjects.Add(WorldMap);
-                WorldMap.SetActive(false);
+                nowMap = (MapType)Enum.Parse(typeof(MapType), name);
+                mapObject = Instantiate(o) as GameObject;
+                mapObject.transform.parent = transform;
+                mapObject.name = name;
+                mapObject.GetComponent<IMap>().InitMap(mapModel.GetStartPos(nowMap), mapModel.GetIsBattleOn(nowMap));
+                Message.Send<CameraLimitMsg>(new CameraLimitMsg(
+                    mapModel.GetCameraMinX(nowMap),
+                    mapModel.GetCameraMaxX(nowMap),
+                    mapModel.GetCameraMinY(nowMap),
+                    mapModel.GetCameraMaxY(nowMap)
+                    )); ;
+
             }));
 
-
-            path = "Map/Dungeon/Dungeon_Map";
-            yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
-            {
-                var DungeonMap = Instantiate(o) as GameObject;
-                DungeonMap.transform.parent = transform;
-                DungeonMap.name = "Dungeon_Map";
-                gameObjects.Add(DungeonMap);
-                DungeonMap.SetActive(false);
-            }));
-
+            isLoadComplete = true;
         }
 
-        public void Load_Map(Map _map)
+        public void ClearMap()
         {
-            for(int i = 0; i < gameObjects.Count; i++)
-            {
-                bool isActive = (i == (int)_map) ? true : false;
-                gameObjects[i].SetActive(isActive);
-            }
+            Destroy(mapObject);
+            mapObject = null;
         }
+
+        public bool GetBattlePossible()
+        {
+            return mapObject.GetComponent<IMap>().IsBattleMap;
+        }
+
+        public Vector2 GetStartPos()
+        {
+            return mapObject.GetComponent<IMap>().StartPos;
+        }
+
+        public GameObject GetMonsters()
+        {
+            return mapObject.GetComponent<IMap>().Monsters;
+        }
+
+        public GameObject GetNpcs()
+        {
+            return mapObject.GetComponent<IMap>().Npcs;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JHchoi.Constants;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +9,10 @@ namespace JHchoi.Managers
     {
         protected List<GameObject> gameObjects = new List<GameObject>();
 
+        public virtual IEnumerator Load_Resource() { yield return null; }
+        public virtual IEnumerator Load_Resource(string name) { yield return null; }
 
-        public abstract IEnumerator Load_Resource();
+        public virtual void Init_Manager() { }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JHchoi.UI.Event;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,54 +7,60 @@ namespace JHchoi.Contents
 {
     public abstract class IMagic : MonoBehaviour
     {
-        protected Vector3 dirVec;
+        [SerializeField] public Vector3 dirVec;
+        [SerializeField] int offset = 10;
         private int damage;
         private float moveSpeed;
+        private float coolTime;
 
         public int Damage { get => damage; set => damage = value; }
         public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+        public float CoolTime { get => coolTime; set => coolTime = value; }
 
-        public virtual void ShootMagic(int _dir)
+        public virtual void InitMagic(int _damage, int _moveSpeed, float _coolTime)
         {
-            dirVec = IntToDirectVector(_dir);
+            this.damage = _damage;
+            this.moveSpeed = _moveSpeed;
+            this.coolTime = _coolTime;
+        }
+
+        public virtual void Shoot(Vector2 _dir)
+        {
+            dirVec = _dir.normalized;
+            StartCoroutine(DestoryDelay());
         }
 
         public void FixedUpdate()
         {
             if (dirVec != null)
-                transform.Translate(dirVec * moveSpeed * Time.deltaTime);
-        }
-
-        Vector3 IntToDirectVector(int _lastDir)
-        {
-            Vector3 result = Vector3.zero;
-            switch (_lastDir)
             {
-                case 0:
-                    return result = new Vector3(0, 1, 0);
-                case 1:
-                    return result = new Vector3(-1, 1, 0);
-                case 2:
-                    return result = new Vector3(-1, 0, 0);
-                case 3:
-                    return result = new Vector3(-1, -1, 0);
-                case 4:
-                    return result = new Vector3(0, -1, 0);
-                case 5:
-                    return result = new Vector3(1, -1, 0);
-                case 6:
-                    return result = new Vector3(1, 0, 0);
-                default:
-                    return result = new Vector3(1, 1, 0);
+                transform.position += dirVec * moveSpeed * Time.deltaTime;
+            }
+
+            if(this.gameObject.tag == "Bullet")
+            {
+                ViewportOutCheck();
             }
         }
 
-        
-        private void OnCollisionEnter2D(Collision2D collision)
+        void ViewportOutCheck()
         {
-            Debug.Log(collision.collider.name);
+            Vector2 viewPortPos = Camera.main.WorldToViewportPoint(transform.position);
+            if (viewPortPos.x < 0 ||
+                viewPortPos.x > 1 ||
+                viewPortPos.y < 0 ||
+                viewPortPos.y > 1)
+            {
+
+                Destroy(this.gameObject);
+            }
         }
 
 
+        IEnumerator DestoryDelay()
+        {
+            yield return new WaitForSeconds(3.0f);
+            Destroy(this.gameObject);
+        }
     }
 }

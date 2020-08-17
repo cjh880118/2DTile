@@ -17,9 +17,10 @@ namespace JHchoi.Contents
 
             this.gameObject.transform.Translate(new Vector3(moveH, moveV));
 
-            Vector2 direction = new Vector2(moveH, moveV);
-            FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+            Vector2 intputDir = new Vector2(moveH, moveV);
 
+            Vector2 direction = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y)) - this.gameObject.transform.position;
+            FindObjectOfType<PlayerAnimation>().SetDirection(intputDir);//, direction);
 
         }
     }

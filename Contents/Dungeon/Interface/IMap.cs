@@ -1,18 +1,27 @@
-﻿using System.Collections;
+﻿using JHchoi.Constants;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IMap : MonoBehaviour
+namespace JHchoi.Contents
 {
-    // Start is called before the first frame update
-    void Start()
+    public abstract class IMap : MonoBehaviour
     {
-        
-    }
+        [SerializeField] protected MapType MapType;
+        [SerializeField] private GameObject monsters;
+        [SerializeField] private GameObject npcs;
+        private bool isBattleMap;
+        private Vector2 startPos;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public bool IsBattleMap { get => isBattleMap; set => isBattleMap = value; }
+        public Vector2 StartPos { get => startPos; set => startPos = value; }
+        public GameObject Monsters { get => monsters; set => monsters = value; }
+        public GameObject Npcs { get => npcs; set => npcs = value; }
+
+        public virtual void InitMap( Vector2 _startPos, bool _isBattlePossible)
+        {
+            startPos = _startPos;
+            isBattleMap = _isBattlePossible;
+        }
     }
 }

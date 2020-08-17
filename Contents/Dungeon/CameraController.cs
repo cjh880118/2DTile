@@ -1,20 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using JHchoi.UI.Event;
+using System;
 
 public class CameraController : MonoBehaviour
 {
     private Transform target;
+    private Vector3 originPos;
+    private bool isShake;
+
     [SerializeField] private float smoothSpeed;
-    [SerializeField] private float minX = -8, maxX = 26, minY = -10, maxY = 6;
+    [SerializeField] private float minX, maxX, minY, maxY;
     //Max Y 6 MInY -10  minX -8 MaxX 26
     // Start is called before the first frame update
-    public void InitCamera()
+    private void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        AddMessage();
     }
 
-    // Update is called once per frame
+    void AddMessage()
+    {
+        Message.AddListener<CameraShakeMsg>(CameraShake);
+        Message.AddListener<CameraLimitMsg>(CameraLimit);
+    }
+
+    private void CameraLimit(CameraLimitMsg msg)
+    {
+        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        minX = msg.minX;
+        maxX = msg.maxX;
+        minY = msg.minY;
+        maxY = msg.maxY;
+    }
+
+    private void CameraShake(CameraShakeMsg msg)
+    {
+        StartCoroutine(Shake(0.1f, 0.1f));
+    }
+
+    public IEnumerator Shake(float _amount, float _duration)
+    {
+        originPos = transform.position;
+        float timer = 0;
+
+        while (timer <= _duration)
+        {
+            transform.localPosition = (Vector3)UnityEngine.Random.insideUnitCircle * _amount + originPos;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
 
     private void LateUpdate()
     {

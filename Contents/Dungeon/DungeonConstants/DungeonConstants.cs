@@ -4,6 +4,15 @@ using UnityEngine;
 
 namespace JHchoi.Constants
 {
+    public enum ManagerType
+    {
+        Map,
+        Player,
+        Monster,
+        Inventory,
+        Npc,
+    }
+
     public enum Direction
     {
         UP,
@@ -21,17 +30,56 @@ namespace JHchoi.Constants
         Die
     }
 
-    public enum Map
+    public enum MapType
     {
-        World,
-        Dungeon
+        Stage1_1,
+        Stage1_2,
+        Stage1_3,
+        //World,
+        //Dungeon,
+        //Castle,
+        //Dungeon_Boss,
+        
     }
 
-    public enum Monster 
-    { 
+    public enum MonsterType
+    {
         Demon,
+        Ogre,
         Zombie,
-        Ogre
+        Phoenix
+    }
+
+    public enum PlayerType
+    {
+        Witch,
+        Warrior
+    }
+
+    public enum ItemKind
+    {
+        Sword,
+        Hammer,
+        Axe,
+        Dagger,
+        Robe,
+        LeatherArmor,
+        SteelArmor,
+        Cap,
+        Necklace,
+        boots,
+        HealPotion,
+        Coin,
+        End
+    }
+
+    public enum ItemType
+    {
+        Gold,
+        Weapon,
+        Armor,
+        Accessory,
+        Consume,
     }
 
 }

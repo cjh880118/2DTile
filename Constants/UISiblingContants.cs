@@ -2,9 +2,8 @@
 {
 	public enum UISibling
 	{
-        KioskTitleDialog,
-        KioskLobbyDialog,
-        KioskInGameDialog,
-        KioskGlobalDialog,
+        BloodDialog,
+        CharacterDialog,
+        InventoryDialog,
     }
 }

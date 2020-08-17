@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlueCircle : MonoBehaviour
+namespace JHchoi.Contents
 {
-    // Start is called before the first frame update
-    void Start()
+    public class BlueCircle : IMagic
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gold : MonoBehaviour
+public class Test : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -16,8 +16,8 @@ public class Gold : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnMouseOver()
     {
-        Debug.Log("골드");
+        Debug.Log("TT");
     }
 }
