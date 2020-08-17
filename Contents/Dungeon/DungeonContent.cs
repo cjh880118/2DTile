@@ -18,7 +18,6 @@ namespace JHchoi.Contents
         private NpcManager npcManager;
         private MonsterManager monsterManager;
         private InventoryManager inventoryManager;
-        //private Inventory inventory;
 
         private bool isInventoryOpen = false;
 
@@ -128,6 +127,13 @@ namespace JHchoi.Contents
                     isInventoryOpen = true;
                     UI.IDialog.RequestDialogEnter<UI.InventoryDialog>();
                     Message.Send<UIInventoryMsg>(new UIInventoryMsg(inventoryManager.GetItemList()));
+                    Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
+                        playerManager.GetPlayerMaxHp(),
+                        playerManager.GetPlayerHp(),
+                        playerManager.GetPlayerAttack(),
+                        playerManager.GetPlayerDefence(),
+                        playerManager.GetPlayerMoveSpeed()
+                        ));
                 }
                 else
                 {
@@ -160,7 +166,7 @@ namespace JHchoi.Contents
             if (mapManager.GetBattlePossible())
             {
                 UI.IDialog.RequestDialogEnter<UI.CharacterDialog>();
-                Message.Send<UIPlayerMsg>(new UIPlayerMsg(playerManager.GetPlayerName(),
+                Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(playerManager.GetPlayerName(),
                     playerManager.GetPlayerMaxHp(),
                     playerManager.GetPlayerHp()
                     ));

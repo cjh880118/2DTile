@@ -17,6 +17,11 @@ namespace JHchoi.Contents
         private int count;
         private bool isStackable;
         private bool isItemInfoOpen = false;
+        private int attack;
+        private int defence;
+        private float moveSpeed;
+        private int hp;
+        private int maxHp;
         [SerializeField] private GameObject ItemInfo;
 
         public bool IsUsePossible { get => isUsePossible; set => isUsePossible = value; }
@@ -26,9 +31,14 @@ namespace JHchoi.Contents
         public int Count { get => count; set => count = value; }
         public bool IsStackable { get => isStackable; set => isStackable = value; }
         public ItemType ItemType { get => itemType; set => itemType = value; }
+        public int Attack { get => attack; set => attack = value; }
+        public int Defence { get => defence; set => defence = value; }
+        public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+        public int Hp { get => hp; set => hp = value; }
+        public int MaxHp { get => maxHp; set => maxHp = value; }
 
-
-        public void Init_Item(ItemKind _ItemKind, ItemType _itemType, string _name, string _itemComment, int _count, bool _isUsePossible, bool _isStackable)
+        public void Init_Item(ItemKind _ItemKind, ItemType _itemType, string _name, string _itemComment, int _count, 
+            bool _isUsePossible, bool _isStackable, int _attack, int _defence, float _moveSpeed, int _hp, int _maxHp)
         {
             itemKind = _ItemKind;
             itemType = _itemType;
@@ -37,6 +47,11 @@ namespace JHchoi.Contents
             count = _count;
             isUsePossible = _isUsePossible;
             isStackable = _isStackable;
+            attack = _attack;
+            defence = _defence;
+            moveSpeed = _moveSpeed;
+            hp = _hp;
+            maxHp = _maxHp;
             ItemInfo = transform.GetChild(0).gameObject;
         }
 

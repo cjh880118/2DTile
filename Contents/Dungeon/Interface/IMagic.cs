@@ -19,9 +19,9 @@ namespace JHchoi.Contents
 
         public virtual void InitMagic(int _damage, int _moveSpeed, float _coolTime)
         {
-            this.damage = _damage;
-            this.moveSpeed = _moveSpeed;
-            this.coolTime = _coolTime;
+            damage = _damage;
+            moveSpeed = _moveSpeed;
+            coolTime = _coolTime;
         }
 
         public virtual void Shoot(Vector2 _dir)

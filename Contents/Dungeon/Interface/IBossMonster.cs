@@ -52,7 +52,7 @@ namespace JHchoi.Contents
             if (collision.collider.tag == "Bullet")
             {
                 hp -= collision.collider.GetComponent<IMagic>().Damage;
-                Message.Send<UIMonsterMsg>(new UIMonsterMsg(name, maxHp, hp));
+                Message.Send<UIMonsterHpMsg>(new UIMonsterHpMsg(name, maxHp, hp));
                 Destroy(collision.collider.gameObject);
             }
         }

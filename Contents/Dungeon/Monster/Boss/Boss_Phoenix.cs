@@ -114,7 +114,7 @@ namespace JHchoi.Contents
                 {
                     float theta = startAngle + step * (float)i;
                     var magic = Instantiate(bullet1_Prefab, transform.position, Quaternion.identity) as GameObject;
-                    magic.GetComponent<IMagic>().InitMagic(5, 5, 5);
+                    magic.GetComponent<IMagic>().InitMagic(15, 5, 5);
                     theta *= Mathf.Deg2Rad;
                     magic.GetComponent<IMagic>().Shoot(new Vector2(3 * Mathf.Cos(theta), 3 * Mathf.Sin(theta)));
                 }
@@ -138,12 +138,12 @@ namespace JHchoi.Contents
                 {
                     float theta = startAngle + step * (float)i;
                     var magic = Instantiate(bullet2_Prefab, transform.position, Quaternion.identity) as GameObject;
-                    magic.GetComponent<IMagic>().InitMagic(5, 5, 5);
+                    magic.GetComponent<IMagic>().InitMagic(15, 5, 5);
                     theta *= Mathf.Deg2Rad;
                     magic.GetComponent<IMagic>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
                 }
 
-                //startAngle += 15;
+                startAngle += 15;
 
                 yield return new WaitForSeconds(0.5f);
             }
@@ -157,7 +157,7 @@ namespace JHchoi.Contents
                 theta += 10;
                 var magic = Instantiate(bullet3_Prefab, transform.position, Quaternion.identity) as GameObject;
                 theta *= Mathf.Deg2Rad;
-                magic.GetComponent<IMagic>().InitMagic(5, 10, 5);
+                magic.GetComponent<IMagic>().InitMagic(15, 10, 5);
                 magic.GetComponent<IMagic>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
                 theta *= Mathf.Rad2Deg;
                 yield return new WaitForSeconds(0.01f);

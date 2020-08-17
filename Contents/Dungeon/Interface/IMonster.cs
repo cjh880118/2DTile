@@ -11,7 +11,7 @@ namespace JHchoi.Contents
         private string name;
         private int maxHp;
         private int hp;
-        private int attackDamage;
+        private int attack;
         private float moveSpeed;
         private Vector3 startPos;
         [SerializeField] private MonsterType monsterType;
@@ -25,7 +25,7 @@ namespace JHchoi.Contents
         public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
         public Vector3 StartPos { get => startPos; set => startPos = value; }
         public MonsterType MonsterType { get => monsterType; set => monsterType = value; }
-        public int AttackDamage { get => attackDamage; set => attackDamage = value; }
+        public int Attack { get => attack; set => attack = value; }
         public string Name { get => name; set => name = value; }
 
         private void Start()
@@ -33,13 +33,13 @@ namespace JHchoi.Contents
             target = GameObject.FindGameObjectWithTag("Player");
         }
 
-        public void Init_Monster(string _name, int _hp, float _moveSpeed, int _attackDamage)
+        public void Init_Monster(string _name, int _hp, float _moveSpeed, int _attack)
         {
             name = _name;
             maxHp = _hp;
             hp = _hp;
             moveSpeed = _moveSpeed;
-            attackDamage = _attackDamage;
+            attack = _attack;
             StartPos = transform.position;
         }
 
@@ -97,7 +97,7 @@ namespace JHchoi.Contents
                     hp -= collision.collider.GetComponent<IMagic>().Damage;
                     Destroy(collision.collider.gameObject);
                     StartCoroutine(HItDelay());
-                    Message.Send<UIMonsterMsg>(new UIMonsterMsg(name, maxHp, hp));
+                    Message.Send<UIMonsterHpMsg>(new UIMonsterHpMsg(name, maxHp, hp));
                     Message.Send<CameraShakeMsg>(new CameraShakeMsg());
 
                     if (hp <= 0)

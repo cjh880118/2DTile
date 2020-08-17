@@ -17,6 +17,8 @@ namespace JHchoi.UI
         [SerializeField] private Text txtMonsterName;
         [SerializeField] private Image imgMonsterHp;
 
+        [SerializeField] private Image[] imgSkill;
+
         [SerializeField] Animator anim;
 
         protected override void OnEnter()
@@ -26,18 +28,19 @@ namespace JHchoi.UI
 
         private void AddMessage()
         {
-            Message.AddListener<UIPlayerMsg>(UIPlayer);
-            Message.AddListener<UIMonsterMsg>(UIMonster);
+            Message.AddListener<UIPlayerHpMsg>(UIPlayerHp);
+            Message.AddListener<UIMonsterHpMsg>(UIMonsterHp);
+            Message.AddListener<UISkillMsg>(UISkill);
         }
 
-        private void UIPlayer(UIPlayerMsg msg)
+
+        private void UIPlayerHp(UIPlayerHpMsg msg)
         {
             txtPlayerName.text = msg.name;
-
             imgPlayerHp.fillAmount = (msg.hp * 100 / msg.maxHp) * 0.01f;
         }
 
-        private void UIMonster(UIMonsterMsg msg)
+        private void UIMonsterHp(UIMonsterHpMsg msg)
         {
             txtMonsterName.text = msg.name;
 
@@ -55,6 +58,19 @@ namespace JHchoi.UI
             corShowMonsterHp = StartCoroutine(ShowMonsterHp());
         }
 
+        private void UISkill(UISkillMsg msg)
+        {
+            for(int i = 0; i < imgSkill.Length; i++)
+            {
+                if (msg.skillNum == i)
+                    imgSkill[i].color = Color.yellow;
+                else
+                    imgSkill[i].color = Color.white;
+            }
+        }
+
+
+
         IEnumerator ShowMonsterHp()
         {
             anim.SetBool("isShow", true);
@@ -70,8 +86,9 @@ namespace JHchoi.UI
 
         private void RemoveMessage()
         {
-            Message.RemoveListener<UIPlayerMsg>(UIPlayer);
-            Message.RemoveListener<UIMonsterMsg>(UIMonster);
+            Message.RemoveListener<UIPlayerHpMsg>(UIPlayerHp);
+            Message.RemoveListener<UIMonsterHpMsg>(UIMonsterHp);
+            Message.RemoveListener<UISkillMsg>(UISkill);
         }
     }
 }

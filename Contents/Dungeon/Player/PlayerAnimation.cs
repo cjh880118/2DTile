@@ -22,7 +22,7 @@ namespace JHchoi.Contents
             anim = GetComponent<Animator>();
         }
 
-        public void SetDirection(Vector2 intput)
+        public void SetDirection(Vector2 intput, Vector2 dir)
         {
             string[] directionArray = null;
 
@@ -33,7 +33,7 @@ namespace JHchoi.Contents
             else
             {
                 directionArray = runDirections;
-                lastDirection = DirectionToIndex(intput);
+                lastDirection = DirectionToIndex(dir);
             }
 
             anim.Play(directionArray[lastDirection]);

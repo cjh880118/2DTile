@@ -14,6 +14,7 @@ namespace JHchoi.Models
         Dictionary<PlayerType, int> DicPlayerHp = new Dictionary<PlayerType, int>();
         Dictionary<PlayerType, float> DicPlayerMoveSpeed = new Dictionary<PlayerType, float>();
         Dictionary<PlayerType, int> DicPlayerAttackDamage = new Dictionary<PlayerType, int>();
+        Dictionary<PlayerType, int> DicPlayerDefence = new Dictionary<PlayerType, int>();
 
         public void Setup(GameModel _owner, string _fileName)
         {
@@ -32,32 +33,39 @@ namespace JHchoi.Models
                 var hp = fileData.GetValue("Hp", index);
                 var moveSpeed = fileData.GetValue("MoveSpeed", index);
                 var attackDamage = fileData.GetValue("AttackDamage", index);
+                var defence = fileData.GetValue("Defence", index);
 
                 DicPlayerName.Add((PlayerType)index, prefabName);
                 DicPlayerHp.Add((PlayerType)index, int.Parse(hp));
                 DicPlayerMoveSpeed.Add((PlayerType)index, float.Parse(moveSpeed));
                 DicPlayerAttackDamage.Add((PlayerType)index, int.Parse(attackDamage));
+                DicPlayerDefence.Add((PlayerType)index, int.Parse(defence));
             }
         }
 
-        public string GetPlayerName(PlayerType _monster)
+        public string GetPlayerName(PlayerType _player)
         {
-            return DicPlayerName[_monster];
+            return DicPlayerName[_player];
         }
 
-        public int GetPlayerHp(PlayerType _monster)
+        public int GetPlayerHp(PlayerType _player)
         {
-            return DicPlayerHp[_monster];
+            return DicPlayerHp[_player];
         }
 
-        public float GetPlayerMoveSpeed(PlayerType _monster)
+        public float GetPlayerMoveSpeed(PlayerType _player)
         {
-            return DicPlayerMoveSpeed[_monster];
+            return DicPlayerMoveSpeed[_player];
         }
 
-        public int GetPlayerAttackDamage(PlayerType _monster)
+        public int GetPlayerAttackDamage(PlayerType _player)
         {
-            return DicPlayerAttackDamage[_monster];
+            return DicPlayerAttackDamage[_player];
+        }
+
+        public int GetPlayerDefence(PlayerType _player)
+        {
+            return DicPlayerDefence[_player];
         }
     }
 }

@@ -25,7 +25,8 @@ namespace JHchoi.Managers
                     playerModel.GetPlayerName(PlayerType.Witch),
                     playerModel.GetPlayerHp(PlayerType.Witch),
                     playerModel.GetPlayerMoveSpeed(PlayerType.Witch),
-                    playerModel.GetPlayerAttackDamage(PlayerType.Witch)
+                    playerModel.GetPlayerAttackDamage(PlayerType.Witch),
+                    playerModel.GetPlayerDefence(PlayerType.Witch)
                     );
             }));
         }
@@ -43,6 +44,21 @@ namespace JHchoi.Managers
         public int GetPlayerHp()
         {
             return player.Hp;
+        }
+
+        public int GetPlayerAttack()
+        {
+            return player.Attack;
+        }
+
+        public int GetPlayerDefence()
+        {
+            return player.Defecnce;
+        }
+
+        public float GetPlayerMoveSpeed()
+        {
+            return player.MoveSpeed;
         }
 
         public void SetInventory(bool isOpen)
@@ -80,7 +96,7 @@ namespace JHchoi.Managers
 
         public void UpgradeAttackDamage(int attackDamage)
         {
-            player.AttackDamage += attackDamage;
+            player.Attack += attackDamage;
         }
     }
 }

@@ -6,13 +6,13 @@ using JHchoi.Contents;
 
 namespace JHchoi.UI.Event
 {
-    public class UIPlayerMsg : Message
+    public class UIPlayerHpMsg : Message
     {
         public string name;
         public int maxHp;
         public int hp;
 
-        public UIPlayerMsg(string _name, int _maxHp, int _hp)
+        public UIPlayerHpMsg(string _name, int _maxHp, int _hp)
         {
             name = _name;
             maxHp = _maxHp;
@@ -20,17 +20,26 @@ namespace JHchoi.UI.Event
         }
     }
 
-    public class UIMonsterMsg : Message
+    public class UIMonsterHpMsg : Message
     {
         public string name;
         public int maxHp;
         public int hp;
 
-        public UIMonsterMsg(string _name, int _maxHp, int _hp)
+        public UIMonsterHpMsg(string _name, int _maxHp, int _hp)
         {
             name = _name;
             maxHp = _maxHp;
             hp = _hp;
+        }
+    }
+
+    public class UISkillMsg : Message
+    {
+        public int skillNum;
+        public UISkillMsg(int _skillNum)
+        {
+            skillNum = _skillNum;
         }
     }
 
@@ -41,7 +50,25 @@ namespace JHchoi.UI.Event
         public UIInventoryMsg(LinkedList<IItem> _listItem)
         {
             listItem = _listItem;
-            //inventory = _inventroy;
+        }
+    }
+
+    public class UIInventoryStatusMsg : Message
+    {
+        public string name;
+        public int maxHp;
+        public int hp;
+        public int attack;
+        public int defence;
+        public float moveSpeed;
+        public UIInventoryStatusMsg(string _name, int _maxHp, int _hp, int _attack, int _defence, float _moveSpeed)
+        {
+            name = _name;
+            maxHp = _maxHp;
+            hp = _hp;
+            attack = _attack;
+            defence = _defence;
+            moveSpeed = _moveSpeed;
         }
     }
 
@@ -74,6 +101,11 @@ namespace JHchoi.UI.Event
         }
     }
 
+
+
+    /// <summary>
+    /// Item Message
+    /// </summary>
     public class DropItemMsg : Message
     {
         public Vector2 dropPos;

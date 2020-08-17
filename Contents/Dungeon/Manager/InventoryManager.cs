@@ -54,7 +54,12 @@ namespace JHchoi.Managers
                 itemModel.GetItemComment(_itmeKind),
                 dropCount,
                 itemModel.GetItemUseAble(_itmeKind),
-                itemModel.GetItemStackAble(_itmeKind));
+                itemModel.GetItemStackAble(_itmeKind),
+                itemModel.GetItemAttack(_itmeKind),
+                itemModel.GetItemDefence(_itmeKind),
+                itemModel.GetItemMoveSpeed(_itmeKind),
+                itemModel.GetItemHp(_itmeKind),
+                itemModel.GetItemMaxHp(_itmeKind));
         }
 
         private void GainItem(GainItemMsg msg)
