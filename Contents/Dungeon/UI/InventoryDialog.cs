@@ -51,9 +51,9 @@ namespace JHchoi.UI
 
                 itemSlotRectTransform.gameObject.SetActive(true);
                 itemSlotRectTransform.gameObject.transform.parent = itemSlotContainer;
-                itemSlotRectTransform.gameObject.transform.GetChild(1).GetComponent<UIItem>().Init_UIItem(o, o.ItemName, o.ItemComment, o.ItemKind, o.ItemType);
+                itemSlotRectTransform.gameObject.transform.GetChild(1).GetComponent<UIItem>().Init_UIItem(o, o.ItemName, o.ItemComment, o.ItemKind, o.ItemType, o.Sprite);
                 itemSlotRectTransform.anchoredPosition = new Vector2(x * itemSlotCellSize, -y * itemSlotCellSize);
-                TextMeshProUGUI uiText = itemSlotRectTransform.Find("txtCount").GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI uiText = itemSlotRectTransform.Find("ImgDragItem").Find("txtCount").GetComponent<TextMeshProUGUI>();
 
                 if (o.Count > 1)
                     uiText.SetText(o.Count.ToString());

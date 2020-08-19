@@ -143,11 +143,39 @@ namespace JHchoi.Contents
 
                 playerManager.SetInventory(isInventoryOpen);
             }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                //todo..포션 사용
+            }
         }
 
         private void AddMessage()
         {
             Message.AddListener<LoadMapMsg>(LoadMap);
+            Message.AddListener<SlotItemMsg>(SlotItem);
+        }
+
+        private void SlotItem(SlotItemMsg msg)
+        {
+            if (msg.isEquip)
+            {
+                playerManager.UpgradeAttack(inventoryManager.GetItemAttack(msg.itemKind));
+                playerManager.UpgradeDefence(inventoryManager.GetItemDefence(msg.itemKind));
+                playerManager.UpgradeMoveSpeed(inventoryManager.GetItemMoveSpeed(msg.itemKind));
+            }
+            else
+            {
+                playerManager.UpgradeAttack(-inventoryManager.GetItemAttack(msg.itemKind));
+                playerManager.UpgradeDefence(-inventoryManager.GetItemDefence(msg.itemKind));
+                playerManager.UpgradeMoveSpeed(-inventoryManager.GetItemMoveSpeed(msg.itemKind));
+            }
+               Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
+                        playerManager.GetPlayerMaxHp(),
+                        playerManager.GetPlayerHp(),
+                        playerManager.GetPlayerAttack(),
+                        playerManager.GetPlayerDefence(),
+                        playerManager.GetPlayerMoveSpeed()
+                        ));
         }
 
         private void LoadMap(LoadMapMsg msg)
@@ -194,7 +222,8 @@ namespace JHchoi.Contents
 
         private void RemoveMessage()
         {
-
+            Message.RemoveListener<LoadMapMsg>(LoadMap);
+            Message.RemoveListener<SlotItemMsg>(SlotItem);
         }
     }
 }

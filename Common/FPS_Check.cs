@@ -19,7 +19,7 @@ public class FPS_Check : MonoBehaviour
     private void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-        Debug.Log(deltaTime);
+        //Debug.Log(deltaTime);
     }
 
     private void OnGUI()

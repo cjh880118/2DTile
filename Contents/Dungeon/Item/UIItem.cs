@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace JHchoi.Contents
 {
-    public class UIItem : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class UIItem : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private string itemName;
         private string itemComment;
@@ -16,32 +16,39 @@ namespace JHchoi.Contents
         private ItemType itemType;
         private IItem item;
         private int count;
+        private Image img;
+        private Sprite sprite;
 
-        [SerializeField] Canvas canvas;
+        private Canvas canvas;
         private RectTransform rectTransform;
         private CanvasGroup canvasGroup;
+        private GameObject copyItem;
 
 
         public ItemType ItemType { get => itemType; set => itemType = value; }
         public string ItemName { get => itemName; set => itemName = value; }
         public string ItemComment { get => itemComment; set => itemComment = value; }
         public ItemKind ItemKind { get => itemKind; set => itemKind = value; }
+        public IItem Item { get => item; set => item = value; }
+        public Sprite Sprite { get => sprite; set => sprite = value; }
 
         private void Awake()
         {
             canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
+            img = GetComponent<Image>();
         }
 
-        public void Init_UIItem(IItem _item, string _name, string _comment, ItemKind _itemKind, ItemType _itemType)
+        public void Init_UIItem(IItem _item, string _name, string _comment, ItemKind _itemKind, ItemType _itemType, Sprite _sprite)
         {
             item = _item;
             itemName = _name;
             itemComment = _comment;
             ItemKind = _itemKind;
             ItemType = _itemType;
-
+            sprite = _sprite;
+            img.sprite = sprite;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -49,6 +56,17 @@ namespace JHchoi.Contents
             Debug.Log("OnBeginDrag");
             canvasGroup.alpha = 0.6f;
             canvasGroup.blocksRaycasts = false;
+
+            copyItem = Instantiate(this.gameObject);
+            copyItem.name = gameObject.name;
+            copyItem.transform.position = this.transform.position;
+            copyItem.transform.parent = this.gameObject.transform.parent;
+            copyItem.transform.localScale = new Vector3(gameObject.transform.localScale.x,
+                gameObject.transform.localScale.y,
+                gameObject.transform.localScale.z);
+            copyItem.GetComponent<UIItem>().Init_UIItem(item, itemName, itemComment, itemKind, itemType, sprite);
+            copyItem.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            copyItem.GetComponent<CanvasGroup>().alpha = 1;
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -70,15 +88,30 @@ namespace JHchoi.Contents
         public void OnPointerDown(PointerEventData eventData)
         {
             Debug.Log("OnPointerDown");
-            GameObject obj = Instantiate(this.gameObject);
-            obj.transform.position = this.transform.position;
-            obj.transform.parent = this.gameObject.transform.parent;
-            obj.transform.localScale = new Vector3(gameObject.transform.localScale.x,
-                gameObject.transform.localScale.y,
-                gameObject.transform.localScale.z);
-            obj.GetComponent<UIItem>().Init_UIItem(item, itemName, itemComment, itemKind, itemType);
+            //copyItem = Instantiate(this.gameObject);
+            //copyItem.name = gameObject.name;
+            //copyItem.transform.position = this.transform.position;
+            //copyItem.transform.parent = this.gameObject.transform.parent;
+            //copyItem.transform.localScale = new Vector3(gameObject.transform.localScale.x,
+            //    gameObject.transform.localScale.y,
+            //    gameObject.transform.localScale.z);
+            //copyItem.GetComponent<UIItem>().Init_UIItem(item, itemName, itemComment, itemKind, itemType, sprite);
         }
 
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            Debug.Log("OnPointerUp");
+            //Destroy(this.gameObject);
+        }
 
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            Debug.Log("PointerEventData");
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            Debug.Log("OnPointerExit"); 
+        }
     }
 }

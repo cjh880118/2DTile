@@ -37,6 +37,9 @@ namespace JHchoi.Managers
 
         private void Drop(ItemKind _itmeKind, Vector2 _dropPos)
         {
+            //테스트
+            _itmeKind = ItemKind.HealPotion;
+
             int dropCount = 1;
             if (_itmeKind == ItemKind.Coin)
                 dropCount = UnityEngine.Random.Range(1, 5);
@@ -92,6 +95,21 @@ namespace JHchoi.Managers
         {
             ListItem.Remove(msg.item);
             Message.Send<UIInventoryMsg>(new UIInventoryMsg(ListItem));
+        }
+
+        public int GetItemAttack(ItemKind _itemKind)
+        {
+            return itemModel.GetItemAttack(_itemKind);
+        }
+
+        public int GetItemDefence(ItemKind _itemKind)
+        {
+            return itemModel.GetItemDefence(_itemKind);
+        }
+
+        public float GetItemMoveSpeed(ItemKind _itemKind)
+        {
+            return itemModel.GetItemMoveSpeed(_itemKind);
         }
 
 

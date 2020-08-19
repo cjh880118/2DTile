@@ -89,14 +89,19 @@ namespace JHchoi.Managers
             player.Hp += hp;
         }
 
-        public void UpgradeMoveSpeed(int moveSpeed)
+        public void UpgradeMoveSpeed(float _moveSpeed)
         {
-            player.MoveSpeed += moveSpeed;
+            player.MoveSpeed += _moveSpeed;
         }
 
-        public void UpgradeAttackDamage(int attackDamage)
+        public void UpgradeAttack(int _attck)
         {
-            player.Attack += attackDamage;
+            player.Attack += _attck;
+        }
+
+        public void UpgradeDefence(int _defence)
+        {
+            player.Defecnce += _defence;
         }
     }
 }

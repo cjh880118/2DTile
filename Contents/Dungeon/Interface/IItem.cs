@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace JHchoi.Contents
 {
-    public class IItem : MonoBehaviour//, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class IItem : MonoBehaviour
     {
         private bool isUsePossible;
         private string itemName;
@@ -22,6 +22,7 @@ namespace JHchoi.Contents
         private float moveSpeed;
         private int hp;
         private int maxHp;
+        private Sprite sprite;
         [SerializeField] private GameObject ItemInfo;
 
         public bool IsUsePossible { get => isUsePossible; set => isUsePossible = value; }
@@ -36,6 +37,7 @@ namespace JHchoi.Contents
         public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
         public int Hp { get => hp; set => hp = value; }
         public int MaxHp { get => maxHp; set => maxHp = value; }
+        public Sprite Sprite { get => sprite; set => sprite = value; }
 
         public void Init_Item(ItemKind _ItemKind, ItemType _itemType, string _name, string _itemComment, int _count, 
             bool _isUsePossible, bool _isStackable, int _attack, int _defence, float _moveSpeed, int _hp, int _maxHp)
@@ -52,6 +54,7 @@ namespace JHchoi.Contents
             moveSpeed = _moveSpeed;
             hp = _hp;
             maxHp = _maxHp;
+            sprite = GetComponent<SpriteRenderer>().sprite;
             ItemInfo = transform.GetChild(0).gameObject;
         }
 
@@ -76,29 +79,6 @@ namespace JHchoi.Contents
             ItemInfo.SetActive(isItemInfoOpen);
         }
 
-        //public void OnBeginDrag(PointerEventData eventData)
-        //{
-        //    Debug.Log("OnBeginDrag");
-        //    canvasGroup.alpha = 0.6f;
-        //    canvasGroup.blocksRaycasts = false;
-        //}
-
-        //public void OnDrag(PointerEventData eventData)
-        //{
-        //    Debug.Log("OnDrag");
-        //    rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-        //}
-
-        //public void OnEndDrag(PointerEventData eventData)
-        //{
-        //    Debug.Log("OnEndDrag");
-        //    canvasGroup.alpha = 1f;
-        //    canvasGroup.blocksRaycasts = true;
-        //}
-
-        //public void OnPointerDown(PointerEventData eventData)
-        //{
-        //    Debug.Log("OnPointerDown");
-        //}
+       
     }
 }

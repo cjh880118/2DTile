@@ -72,6 +72,17 @@ namespace JHchoi.UI.Event
         }
     }
 
+    public class SlotItemMsg : Message
+    {
+        public bool isEquip;
+        public ItemKind itemKind;
+        public SlotItemMsg(bool _isEquip, ItemKind _itemKind)
+        {
+            isEquip = _isEquip;
+            itemKind = _itemKind;
+        }
+    }
+
     public class LoadMapMsg : Message
     {
         public MapType map;
