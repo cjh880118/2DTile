@@ -25,10 +25,10 @@ MonoBehaviour:
       amount: 0
     - AllowedItems: 
       item:
-        Name: Sword
-        Id: 1
+        Name: 
+        Id: -1
         buffs: []
-      amount: 1
+      amount: 0
     - AllowedItems: 
       item:
         Name: 

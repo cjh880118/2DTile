@@ -157,25 +157,25 @@ namespace JHchoi.Contents
 
         private void SlotItem(SlotItemMsg msg)
         {
-            if (msg.isEquip)
-            {
-                playerManager.UpgradeAttack(inventoryManager.GetItemAttack(msg.itemKind));
-                playerManager.UpgradeDefence(inventoryManager.GetItemDefence(msg.itemKind));
-                playerManager.UpgradeMoveSpeed(inventoryManager.GetItemMoveSpeed(msg.itemKind));
-            }
-            else
-            {
-                playerManager.UpgradeAttack(-inventoryManager.GetItemAttack(msg.itemKind));
-                playerManager.UpgradeDefence(-inventoryManager.GetItemDefence(msg.itemKind));
-                playerManager.UpgradeMoveSpeed(-inventoryManager.GetItemMoveSpeed(msg.itemKind));
-            }
-               Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
-                        playerManager.GetPlayerMaxHp(),
-                        playerManager.GetPlayerHp(),
-                        playerManager.GetPlayerAttack(),
-                        playerManager.GetPlayerDefence(),
-                        playerManager.GetPlayerMoveSpeed()
-                        ));
+            //if (msg.isEquip)
+            //{
+            //    playerManager.UpgradeAttack(inventoryManager.GetItemAttack(msg.itemKind));
+            //    playerManager.UpgradeDefence(inventoryManager.GetItemDefence(msg.itemKind));
+            //    playerManager.UpgradeMoveSpeed(inventoryManager.GetItemMoveSpeed(msg.itemKind));
+            //}
+            //else
+            //{
+            //    playerManager.UpgradeAttack(-inventoryManager.GetItemAttack(msg.itemKind));
+            //    playerManager.UpgradeDefence(-inventoryManager.GetItemDefence(msg.itemKind));
+            //    playerManager.UpgradeMoveSpeed(-inventoryManager.GetItemMoveSpeed(msg.itemKind));
+            //}
+            //   Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
+            //            playerManager.GetPlayerMaxHp(),
+            //            playerManager.GetPlayerHp(),
+            //            playerManager.GetPlayerAttack(),
+            //            playerManager.GetPlayerDefence(),
+            //            playerManager.GetPlayerMoveSpeed()
+            //            ));
         }
 
         private void LoadMap(LoadMapMsg msg)

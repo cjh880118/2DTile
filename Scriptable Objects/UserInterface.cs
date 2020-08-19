@@ -9,7 +9,6 @@ using UnityEngine.Events;
 
 public abstract class UserInterface : MonoBehaviour
 {
-
     public InventoryObject inventory;
     public Dictionary<GameObject, InventorySlot> slotsOnInterface = new Dictionary<GameObject, InventorySlot>();
 
@@ -44,13 +43,6 @@ public abstract class UserInterface : MonoBehaviour
     }
 
     public abstract void CreateSlots();
-
-
-    //void Update()
-    //{
-    //    slotsOnInterface.UpdateSlotDisplay();
-    //}
-
 
 
     protected void AddEvent(GameObject obj, EventTriggerType type, UnityAction<BaseEventData> action)
@@ -88,7 +80,7 @@ public abstract class UserInterface : MonoBehaviour
             rt.sizeDelta = new Vector2(50, 50);
             tempItem.transform.SetParent(transform.parent);
             var img = tempItem.AddComponent<Image>();
-            img.sprite = slotsOnInterface[obj].ItemObject.uiDisplay;//inventory.database.GetItem[slotsOnInterface[obj].item.Id].uiDisplay;
+            img.sprite = slotsOnInterface[obj].ItemObject.uiDisplay;
             img.raycastTarget = false;
         }
 

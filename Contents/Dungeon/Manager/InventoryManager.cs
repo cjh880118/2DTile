@@ -13,8 +13,6 @@ namespace JHchoi.Managers
     public class InventoryManager : IManager
     {
         private LinkedList<IItem> ListItem = new LinkedList<IItem>();
-        ItemModel itemModel = Model.First<ItemModel>();
-
 
         public override IEnumerator Load_Resource()
         {
@@ -32,7 +30,7 @@ namespace JHchoi.Managers
         private void DropItem(DropItemMsg msg)
         {
             int itemKind = UnityEngine.Random.Range((int)ItemKind.Sword, (int)ItemKind.End);
-            Drop((ItemKind)itemKind, msg.dropPos);
+            //Drop((ItemKind)itemKind, msg.dropPos);
         }
 
         private void Drop(ItemKind _itmeKind, Vector2 _dropPos)
@@ -51,18 +49,18 @@ namespace JHchoi.Managers
             var obj = Instantiate(Resources.Load(path) as GameObject);
             obj.transform.position = _dropPos;
             obj.transform.parent = transform;
-            obj.GetComponent<IItem>().Init_Item(_itmeKind,
-                itemModel.GetItemType(_itmeKind),
-                itemModel.GetItemName(_itmeKind),
-                itemModel.GetItemComment(_itmeKind),
-                dropCount,
-                itemModel.GetItemUseAble(_itmeKind),
-                itemModel.GetItemStackAble(_itmeKind),
-                itemModel.GetItemAttack(_itmeKind),
-                itemModel.GetItemDefence(_itmeKind),
-                itemModel.GetItemMoveSpeed(_itmeKind),
-                itemModel.GetItemHp(_itmeKind),
-                itemModel.GetItemMaxHp(_itmeKind));
+            //obj.GetComponent<IItem>().Init_Item(_itmeKind,
+            //    itemModel.GetItemType(_itmeKind),
+            //    itemModel.GetItemName(_itmeKind),
+            //    itemModel.GetItemComment(_itmeKind),
+            //    dropCount,
+            //    itemModel.GetItemUseAble(_itmeKind),
+            //    itemModel.GetItemStackAble(_itmeKind),
+            //    itemModel.GetItemAttack(_itmeKind),
+            //    itemModel.GetItemDefence(_itmeKind),
+            //    itemModel.GetItemMoveSpeed(_itmeKind),
+            //    itemModel.GetItemHp(_itmeKind),
+            //    itemModel.GetItemMaxHp(_itmeKind));
         }
 
         private void GainItem(GainItemMsg msg)
@@ -97,20 +95,20 @@ namespace JHchoi.Managers
             Message.Send<UIInventoryMsg>(new UIInventoryMsg(ListItem));
         }
 
-        public int GetItemAttack(ItemKind _itemKind)
-        {
-            return itemModel.GetItemAttack(_itemKind);
-        }
+        //public int GetItemAttack(ItemKind _itemKind)
+        //{
+        //    return itemModel.GetItemAttack(_itemKind);
+        //}
 
-        public int GetItemDefence(ItemKind _itemKind)
-        {
-            return itemModel.GetItemDefence(_itemKind);
-        }
+        //public int GetItemDefence(ItemKind _itemKind)
+        //{
+        //    return itemModel.GetItemDefence(_itemKind);
+        //}
 
-        public float GetItemMoveSpeed(ItemKind _itemKind)
-        {
-            return itemModel.GetItemMoveSpeed(_itemKind);
-        }
+        //public float GetItemMoveSpeed(ItemKind _itemKind)
+        //{
+        //    return itemModel.GetItemMoveSpeed(_itemKind);
+        //}
 
 
         public void GainItem(IItem _item)

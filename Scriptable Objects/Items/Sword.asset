@@ -15,13 +15,13 @@ MonoBehaviour:
   uiDisplay: {fileID: -478559387293086990, guid: 5a96496845d147248871cd849878ec49,
     type: 3}
   stackable: 0
-  type: 2
+  type: 0
   description: 
   data:
     Name: 
     Id: 1
     buffs:
-    - attribute: 0
+    - status: 0
       value: 0
       min: 10
       max: 20

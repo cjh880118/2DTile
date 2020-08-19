@@ -12,7 +12,6 @@ namespace JHchoi.Models
         public ModelRef<PlayerModel> playerModel = new ModelRef<PlayerModel>();
         public ModelRef<MonsterModel> monsterModel = new ModelRef<MonsterModel>();
         public ModelRef<MapModel> mapModel = new ModelRef<MapModel>();
-        public ModelRef<ItemModel> itemModel = new ModelRef<ItemModel>();
 
         public void Setup()
         {
@@ -27,9 +26,6 @@ namespace JHchoi.Models
 
             mapModel.Model = new MapModel();
             mapModel.Model.Setup(this, "MapSetting");
-
-            itemModel.Model = new ItemModel();
-            itemModel.Model.Setup(this, "ItemSetting");
         }
     }
 }

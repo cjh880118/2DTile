@@ -5,13 +5,9 @@ using UnityEngine;
 
 public class TestPlayer : MonoBehaviour
 {
-
-    //public MouseItem mouseItem = new MouseItem();
     public InventoryObject inventory;
     public InventoryObject equipment;
-
     public Attribute[] attributes;
-    // Start is called before the first frame update
 
     private void Start()
     {
@@ -34,20 +30,18 @@ public class TestPlayer : MonoBehaviour
 
         switch (_slot.parent.inventory.type)
         {
-            case InterfaceType.Inventory:
+            case InventoryType.Inventory:
                 break;
-            case InterfaceType.Equipment:
+            case InventoryType.Equipment:
                 print(string.Concat("Remove ", _slot.ItemObject," on", _slot.parent.inventory.type,", Allowed Items : ", string.Join(", ", _slot.AllowedItems)));
                 for (int i = 0; i < _slot.item.buffs.Length; i++)
                 {
                     for (int j = 0; j < attributes.Length; j++)
                     {
-                        if (attributes[j].type == _slot.item.buffs[i].attribute)
+                        if (attributes[j].type == _slot.item.buffs[i].status)
                             attributes[j].value.RemoveModifier(_slot.item.buffs[i]);
                     }
                 }
-                break;
-            case InterfaceType.Chest:
                 break;
         
             default:
@@ -65,21 +59,19 @@ public class TestPlayer : MonoBehaviour
 
         switch (_slot.parent.inventory.type)
         {
-            case InterfaceType.Inventory:
+            case InventoryType.Inventory:
                 break;
-            case InterfaceType.Equipment:
+            case InventoryType.Equipment:
                 print(string.Concat("Placed ", _slot.ItemObject, " on", _slot.parent.inventory.type, ", Allowed Items : ", string.Join(", ", _slot.AllowedItems)));
                 for (int i = 0; i < _slot.item.buffs.Length; i++)
                 {
                     for (int j = 0; j < attributes.Length; j++)
                     {
-                        if (attributes[j].type == _slot.item.buffs[i].attribute)
+                        if (attributes[j].type == _slot.item.buffs[i].status)
                             attributes[j].value.AddModifier(_slot.item.buffs[i]);
                     }
                 }
                 
-                break;
-            case InterfaceType.Chest:
                 break;
 
             default:
@@ -91,19 +83,31 @@ public class TestPlayer : MonoBehaviour
         print("OnAfterSlotUpdate");
     }
 
-    public void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        var item = other.GetComponent<GroundItem>();
+        var item = collision.GetComponent<GroundItem>();
         if (item)
         {
             Item _item = new Item(item.item);
             if (inventory.AddItem(_item, 1))
             {
-                Destroy(other.gameObject);
-
+                Destroy(collision.gameObject);
             }
         }
     }
+
+    //public void OnTriggerEnter(Collider other)
+    //{
+    //    var item = other.GetComponent<GroundItem>();
+    //    if (item)
+    //    {
+    //        Item _item = new Item(item.item);
+    //        if (inventory.AddItem(_item, 1))
+    //        {
+    //            Destroy(other.gameObject);
+    //        }
+    //    }
+    //}
 
     private void Update()
     {
@@ -137,7 +141,7 @@ public class Attribute
 {
     [NonSerialized]
     public TestPlayer parent;
-    public Attributes type;
+    public Status type;
     public ModifiableInt value;
     public void SetParent(TestPlayer _parent)
     {

@@ -5,21 +5,25 @@ using UnityEngine;
 
 public enum Itemtype
 {
-    Food,
-    Helmet,
-    Weapon,
-    Shield,
+    Sword,
+    Hammer,
+    Axe,
+    Dagger,
+    Robe,
+    LeatherArmor,
+    SteelArmor,
+    Cap,
+    Necklace,
     Boots,
-    Chest,
-    Default
+    HealPotion,
+    Coin,
 }
 
-public enum Attributes
+public enum Status
 {
-    Agility,
-    Intellect,
-    Stamina,
-    Strngth
+    Attack,
+    Defence,
+    MoveSpeed,
 }
 
 
@@ -47,7 +51,6 @@ public class Item
     public int Id;
     public ItemBuff[] buffs;
 
-
     public Item()
     {
         Name = "";
@@ -64,7 +67,7 @@ public class Item
 
             buffs[i] = new ItemBuff(item.data.buffs[i].min, item.data.buffs[i].max)
             {
-                attribute = item.data.buffs[i].attribute
+                status = item.data.buffs[i].status
             };
         }
     }
@@ -73,7 +76,7 @@ public class Item
 [Serializable]
 public class ItemBuff : IModifiers
 {
-    public Attributes attribute;
+    public Status status;
     public int value;
     public int min;
     public int max;
