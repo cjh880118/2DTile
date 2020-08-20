@@ -26,6 +26,16 @@ public enum Status
     MoveSpeed,
 }
 
+public enum EquipSlot
+{
+    Weapon,
+    Armor,
+    Accessory,
+    Consume,
+    ETC,
+}
+
+
 
 [CreateAssetMenu(fileName = "New Itme", menuName = "Inventory System/Item/Inven")]
 public class ItemObject : ScriptableObject
@@ -33,6 +43,7 @@ public class ItemObject : ScriptableObject
     public Sprite uiDisplay;
     public bool stackable;
     public Itemtype type;
+    public EquipSlot equipSlot;
     [TextArea(15, 20)]
     public string description;
     public Item data = new Item();

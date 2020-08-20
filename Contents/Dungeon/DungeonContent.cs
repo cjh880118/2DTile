@@ -77,7 +77,6 @@ namespace JHchoi.Contents
                 StartCoroutine(_monsterManager.GetComponent<MonsterManager>().Load_Resource());
             }));
 
-            //inventoryManager = new InventoryManager();
 
             path = "manager/inventorymanager";
             yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
@@ -87,24 +86,32 @@ namespace JHchoi.Contents
                 inventoryManager = _inventorymanager.GetComponent<InventoryManager>();
                 Managers.Add(ManagerType.Inventory, _inventorymanager);
                 StartCoroutine(_inventorymanager.GetComponent<InventoryManager>().Load_Resource());
+
+                inventoryManager.ItemUpdate += ItemUpdate;
             }));
 
 
             SetLoadComplete();
         }
 
+        private void ItemUpdate(Managers.Attribute[] attributes)
+        {
+            playerManager.UpdateEquipment(attributes);
+            Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
+                   playerManager.GetPlayerMaxHp(),
+                   playerManager.GetPlayerHp(),
+                   playerManager.GetPlayerAttack(),
+                   playerManager.GetPlayerDefence(),
+                   playerManager.GetPlayerMoveSpeed()
+                   ));
+        }
 
         protected override void OnEnter()
         {
             AddMessage();
             LoadMap(new LoadMapMsg(MapType.Stage1_1));
-            //inventoryManager.OnItemListChange += ItemListChange;
         }
 
-        private void ItemListChange(object sender, EventArgs e)
-        {
-
-        }
 
         private void Update()
         {
@@ -126,7 +133,6 @@ namespace JHchoi.Contents
                 {
                     isInventoryOpen = true;
                     UI.IDialog.RequestDialogEnter<UI.InventoryDialog>();
-                    Message.Send<UIInventoryMsg>(new UIInventoryMsg(inventoryManager.GetItemList()));
                     Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
                         playerManager.GetPlayerMaxHp(),
                         playerManager.GetPlayerHp(),
@@ -152,31 +158,8 @@ namespace JHchoi.Contents
         private void AddMessage()
         {
             Message.AddListener<LoadMapMsg>(LoadMap);
-            Message.AddListener<SlotItemMsg>(SlotItem);
         }
 
-        private void SlotItem(SlotItemMsg msg)
-        {
-            //if (msg.isEquip)
-            //{
-            //    playerManager.UpgradeAttack(inventoryManager.GetItemAttack(msg.itemKind));
-            //    playerManager.UpgradeDefence(inventoryManager.GetItemDefence(msg.itemKind));
-            //    playerManager.UpgradeMoveSpeed(inventoryManager.GetItemMoveSpeed(msg.itemKind));
-            //}
-            //else
-            //{
-            //    playerManager.UpgradeAttack(-inventoryManager.GetItemAttack(msg.itemKind));
-            //    playerManager.UpgradeDefence(-inventoryManager.GetItemDefence(msg.itemKind));
-            //    playerManager.UpgradeMoveSpeed(-inventoryManager.GetItemMoveSpeed(msg.itemKind));
-            //}
-            //   Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
-            //            playerManager.GetPlayerMaxHp(),
-            //            playerManager.GetPlayerHp(),
-            //            playerManager.GetPlayerAttack(),
-            //            playerManager.GetPlayerDefence(),
-            //            playerManager.GetPlayerMoveSpeed()
-            //            ));
-        }
 
         private void LoadMap(LoadMapMsg msg)
         {
@@ -223,7 +206,6 @@ namespace JHchoi.Contents
         private void RemoveMessage()
         {
             Message.RemoveListener<LoadMapMsg>(LoadMap);
-            Message.RemoveListener<SlotItemMsg>(SlotItem);
         }
     }
 }

@@ -8,13 +8,14 @@ namespace JHchoi.Managers
     {
         public override IEnumerator Load_Resource()
         {
-            string path = "Prefabs/Npc/Dungeon_Npc";
-            yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
-            {
-                var dungeonNpc = Instantiate(o) as GameObject;
-                dungeonNpc.name = "DungeonNpc";
-                dungeonNpc.transform.parent = transform;
-            }));
+            yield return null;
+            //string path = "Prefabs/Npc/Dungeon_Npc";
+            //yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
+            //{
+            //    var dungeonNpc = Instantiate(o) as GameObject;
+            //    dungeonNpc.name = "DungeonNpc";
+            //    dungeonNpc.transform.parent = transform;
+            //}));
         }
     }
 }

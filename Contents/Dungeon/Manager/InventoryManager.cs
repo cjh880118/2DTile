@@ -5,126 +5,177 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using JHchoi.Models;
-
+using Attribute = JHchoi.Contents.Attribute;
 
 namespace JHchoi.Managers
 {
     public class InventoryManager : IManager
     {
-        private LinkedList<IItem> ListItem = new LinkedList<IItem>();
+        public delegate void SlotUpdated(Attribute[] attributes);
+        public InventoryObject inventory;
+        public InventoryObject equipment;
+        public Attribute[] attributes;
+        public SlotUpdated ItemUpdate;
 
         public override IEnumerator Load_Resource()
         {
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                attributes[i].SetParent(this);
+            }
+
+            for (int i = 0; i < equipment.GetSlots.Length; i++)
+            {
+                equipment.GetSlots[i].OnBeforeUpdate += OnBeforeSlotUpdate;
+                equipment.GetSlots[i].OnAfterUpdate += OnAfterSlotUpdate;
+            }
+
+
             AddMessage();
             yield return null;
+        }
+
+        public void OnBeforeSlotUpdate(InventorySlot _slot)
+        {
+            if (_slot.ItemObject == null)
+                return;
+
+            switch (_slot.parent.inventory.type)
+            {
+                case InventoryType.Inventory:
+                    break;
+                case InventoryType.Equipment:
+                    print(string.Concat("Remove ", _slot.ItemObject, " on", _slot.parent.inventory.type, ", Allowed Items : ", string.Join(", ", _slot.AllowedItems)));
+                    for (int i = 0; i < _slot.item.buffs.Length; i++)
+                    {
+                        for (int j = 0; j < attributes.Length; j++)
+                        {
+                            if (attributes[j].type == _slot.item.buffs[i].status)
+                                attributes[j].value.RemoveModifier(_slot.item.buffs[i]);
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            ItemUpdate.Invoke(attributes);
+
+            Debug.Log(attributes[0].value.BaseValue);
+            Debug.Log(attributes[0].value.ModifiedValue);
+            print("OnBeforeSlotUpdate");
+        }
+        public void OnAfterSlotUpdate(InventorySlot _slot)
+        {
+            if (_slot.ItemObject == null)
+                return;
+
+
+            switch (_slot.parent.inventory.type)
+            {
+                case InventoryType.Inventory:
+                    break;
+                case InventoryType.Equipment:
+                    print(string.Concat("Placed ", _slot.ItemObject, " on", _slot.parent.inventory.type, ", Allowed Items : ", string.Join(", ", _slot.AllowedItems)));
+                    for (int i = 0; i < _slot.item.buffs.Length; i++)
+                    {
+                        for (int j = 0; j < attributes.Length; j++)
+                        {
+                            if (attributes[j].type == _slot.item.buffs[i].status)
+                                attributes[j].value.AddModifier(_slot.item.buffs[i]);
+                        }
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            ItemUpdate.Invoke(attributes);
+            Debug.Log(attributes[0].value.BaseValue);
+            Debug.Log(attributes[0].value.ModifiedValue);
+            print("OnAfterSlotUpdate");
         }
 
         private void AddMessage()
         {
             Message.AddListener<DropItemMsg>(DropItem);
-            Message.AddListener<GainItemMsg>(GainItem);
-            Message.AddListener<RemoveItemMsg>(RemoveItem);
+            Message.AddListener<AddItemMsg>(AddItem);
+
+        }
+
+        private void AddItem(AddItemMsg msg)
+        {
+             var item = msg.item.GetComponent<GroundItem>();
+            if (item)
+            {
+                Item _item = new Item(item.item);
+                if (inventory.AddItem(_item, 1))
+                {
+                    Destroy(msg.item);
+                }
+            }
         }
 
         private void DropItem(DropItemMsg msg)
         {
             int itemKind = UnityEngine.Random.Range((int)ItemKind.Sword, (int)ItemKind.End);
-            //Drop((ItemKind)itemKind, msg.dropPos);
+            Drop((ItemKind)itemKind, msg.dropPos);
         }
 
         private void Drop(ItemKind _itmeKind, Vector2 _dropPos)
         {
             //테스트
-            _itmeKind = ItemKind.HealPotion;
+            _itmeKind = ItemKind.Axe;
 
-            int dropCount = 1;
-            if (_itmeKind == ItemKind.Coin)
-                dropCount = UnityEngine.Random.Range(1, 5);
-            else if(_itmeKind == ItemKind.HealPotion)
-                dropCount = UnityEngine.Random.Range(1, 3);
+            //int dropCount;// = 1;
+            //if (_itmeKind == ItemKind.Coin)
+            //    dropCount = UnityEngine.Random.Range(1, 5);
+            //else if (_itmeKind == ItemKind.HealPotion)
+            //    dropCount = UnityEngine.Random.Range(1, 3);
 
 
             string path = "Prefabs/Item/" + _itmeKind.ToString();
             var obj = Instantiate(Resources.Load(path) as GameObject);
             obj.transform.position = _dropPos;
             obj.transform.parent = transform;
-            //obj.GetComponent<IItem>().Init_Item(_itmeKind,
-            //    itemModel.GetItemType(_itmeKind),
-            //    itemModel.GetItemName(_itmeKind),
-            //    itemModel.GetItemComment(_itmeKind),
-            //    dropCount,
-            //    itemModel.GetItemUseAble(_itmeKind),
-            //    itemModel.GetItemStackAble(_itmeKind),
-            //    itemModel.GetItemAttack(_itmeKind),
-            //    itemModel.GetItemDefence(_itmeKind),
-            //    itemModel.GetItemMoveSpeed(_itmeKind),
-            //    itemModel.GetItemHp(_itmeKind),
-            //    itemModel.GetItemMaxHp(_itmeKind));
-        }
 
-        private void GainItem(GainItemMsg msg)
+        }
+        public void AttributeModified(Attribute attribute)
         {
-            if (msg.item.IsStackable)
-            {
-                bool isItemAlreadyInInventory = false;
-                foreach (var o in ListItem)
-                {
-                    if (o.ItemKind == msg.item.ItemKind)
-                    {
-                        o.Count += msg.item.Count;
-                        isItemAlreadyInInventory = true;
-                    }
-                }
-
-                if (!isItemAlreadyInInventory)
-                    ListItem.AddLast(msg.item);
-            }
-            else
-            {
-                ListItem.AddLast(msg.item);
-            }
-
-            Message.Send<UIInventoryMsg>(new UIInventoryMsg(ListItem));
-            //OnItemListChange?.Invoke(this, EventArgs.Empty);
+            Debug.Log(string.Concat(attribute.type, " was update! value is now ", attribute.value.ModifiedValue));
         }
 
-        private void RemoveItem(RemoveItemMsg msg)
+        private void OnApplicationQuit()
         {
-            ListItem.Remove(msg.item);
-            Message.Send<UIInventoryMsg>(new UIInventoryMsg(ListItem));
+            inventory.Clear();
+            equipment.Clear();
         }
 
-        //public int GetItemAttack(ItemKind _itemKind)
-        //{
-        //    return itemModel.GetItemAttack(_itemKind);
-        //}
-
-        //public int GetItemDefence(ItemKind _itemKind)
-        //{
-        //    return itemModel.GetItemDefence(_itemKind);
-        //}
-
-        //public float GetItemMoveSpeed(ItemKind _itemKind)
-        //{
-        //    return itemModel.GetItemMoveSpeed(_itemKind);
-        //}
-
-
-        public void GainItem(IItem _item)
+        public Attribute[] GetAttribute()
         {
-            ListItem.AddLast(_item);
+            return attributes;
         }
 
-        public void RemoveItme(IItem item)
+    }
+
+    [Serializable]
+    public class Attribute
+    {
+        [NonSerialized]
+        public InventoryManager parent;
+        public Status type;
+        public ModifiableInt value;
+        public void SetParent(InventoryManager _parent)
         {
-            ListItem.Remove(item);
+            parent = _parent;
+            value = new ModifiableInt(AttributeModified);
         }
 
-        public LinkedList<IItem> GetItemList()
+        public void AttributeModified()
         {
-            return ListItem;
+            parent.AttributeModified(this);
         }
-
     }
 }

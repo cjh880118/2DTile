@@ -6,24 +6,38 @@ using JHchoi.UI.Event;
 
 namespace JHchoi.Contents
 {
+    public class PlayerStatus
+    {
+        public string name;
+        public int hp;
+        public int maxHp;
+        public int attack;
+        public float moveSpeed;
+        public int defecnce;
+    }
+
+    public class ItemStatus
+    {
+        public int ItemAttack;
+        public int ItemDefence;
+        public float ItemMoveSpeed;
+    }
+
 
     public abstract class IPlayer : MonoBehaviour
     {
+        delegate void Use_Skill(Vector2 dir);
+
+        private PlayerStatus player = new PlayerStatus();
+        private ItemStatus playerItem = new ItemStatus();
+
         private float moveH, moveV;
-        private string name;
-        private int hp;
-        private int maxHp;
-        private float moveSpeed;
         private float hitDelay = 1.5f;
         private bool isHitAble = true;
-        private int attack;
-        private int defecnce;
         private bool isBattleOn = false;
         private bool isInventoryOpen = false;
-
         int skillNum = 0;
         protected bool[] isSkillPossbile = { true, true, true, true };
-        delegate void Use_Skill(Vector2 dir);
         Use_Skill use_Skill;
         Vector2 Skilldir;
 
@@ -33,23 +47,24 @@ namespace JHchoi.Contents
             UI.IDialog.RequestDialogEnter<UI.BloodDialog>();
             Message.Send<UISkillMsg>(new UISkillMsg(skillNum));
             use_Skill = Skill_1;
-            name = _name;
-            maxHp = _hp;
-            hp = _hp;
-            moveSpeed = _moveSpeed;
-            attack = _attack;
-            defecnce = _defence;
+            player.name = _name;
+            player.maxHp = _hp;
+            player.hp = _hp;
+            player.moveSpeed = _moveSpeed;
+            player.attack = _attack;
+            player.defecnce = _defence;
         }
 
-        public int Hp { get => hp; set => hp = value; }
-        public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
-        public bool IsBattleOn { get => isBattleOn; set => isBattleOn = value; }
-        public string Name { get => name; set => name = value; }
-        public int Attack { get => attack; set => attack = value; }
-        public int MaxHp { get => maxHp; set => maxHp = value; }
+        public int Hp { get => player.hp; }// set => player.hp = value; }
+        public float MoveSpeed { get => player.moveSpeed + playerItem.ItemMoveSpeed; }
+        public bool IsBattleOn { get => isBattleOn;  set => isBattleOn = value; }
+        public string Name { get => name; }
+        //set => name = value; }
+        public int TotalAttack { get => player.attack + playerItem.ItemAttack; }
+        public int MaxHp { get => player.maxHp; }
         public bool IsInventoryOpen { get => isInventoryOpen; set => isInventoryOpen = value; }
-        public float HitDelay { get => hitDelay; set => hitDelay = value; }
-        public int Defecnce { get => defecnce; set => defecnce = value; }
+        public int Defecnce { get => player.defecnce + playerItem.ItemDefence; }
+        public ItemStatus PlayerItem { get => playerItem; }
 
         private void FixedUpdate()
         {
@@ -97,15 +112,15 @@ namespace JHchoi.Contents
 
         protected void Move()
         {
-            moveH = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-            moveV = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+            moveH = Input.GetAxis("Horizontal") * MoveSpeed * Time.deltaTime;
+            moveV = Input.GetAxis("Vertical") * MoveSpeed * Time.deltaTime;
 
             this.gameObject.transform.Translate(new Vector3(moveH, moveV));
 
             Vector2 intputDir = new Vector2(moveH, moveV);
             Vector2 direction = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y)) - this.gameObject.transform.position;
             Skilldir = direction;
-            //FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+
             FindObjectOfType<PlayerAnimation>().SetDirection(intputDir, direction);
         }
         protected abstract void Skill_1(Vector2 _dir);
@@ -115,23 +130,24 @@ namespace JHchoi.Contents
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+
             if (collision.collider.tag == "Monster" && isHitAble)
             {
-                hp -= (collision.collider.GetComponent<IMonster>().Attack - defecnce);
+                player.hp -= (collision.collider.GetComponent<IMonster>().Attack - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
 
             if (collision.collider.tag == "BossMonster" && isHitAble)
             {
-                hp -= (collision.collider.GetComponent<IBossMonster>().AttackDamage - defecnce);
+                player.hp -= (collision.collider.GetComponent<IBossMonster>().AttackDamage - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
 
             if (collision.collider.tag == "MonsterBullet" && isHitAble)
             {
-                hp -= (collision.collider.GetComponent<IMagic>().Damage - defecnce);
+                player.hp -= (collision.collider.GetComponent<IMagic>().Damage - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
                 Destroy(collision.collider.gameObject);
@@ -139,20 +155,18 @@ namespace JHchoi.Contents
 
             if (collision.collider.tag == "Item")
             {
-                Message.Send<GainItemMsg>(new GainItemMsg(collision.collider.GetComponent<IItem>()));
-                Destroy(collision.collider.gameObject);
+                Message.Send<AddItemMsg>(new AddItemMsg(collision.gameObject));
             }
 
             if (collision.collider.tag == "Trap" && isHitAble)
             {
-                hp -= (collision.collider.GetComponent<Spike_Trap>().Damage - defecnce);
+                player.hp -= (collision.collider.GetComponent<Spike_Trap>().Damage - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
 
-            Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(name, maxHp, hp));
+            Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(name, player.maxHp, player.hp));
         }
-
 
         IEnumerator RecoveryTime()
         {

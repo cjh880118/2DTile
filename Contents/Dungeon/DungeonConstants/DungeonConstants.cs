@@ -35,11 +35,6 @@ namespace JHchoi.Constants
         Stage1_1,
         Stage1_2,
         Stage1_3,
-        //World,
-        //Dungeon,
-        //Castle,
-        //Dungeon_Boss,
-        
     }
 
     public enum MonsterType

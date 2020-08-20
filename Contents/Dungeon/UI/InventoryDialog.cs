@@ -11,63 +11,36 @@ namespace JHchoi.UI
 {
     public class InventoryDialog : IDialog
     {
-        [SerializeField] private Transform itemSlotContainer;
-        [SerializeField] private Transform itemSlotTemplate;
+        [SerializeField] private UserInterface equipmentInventory;
+        [SerializeField] private UserInterface begInvenotry;
         [SerializeField] private TextMeshProUGUI txtName;
         [SerializeField] private TextMeshProUGUI txtHp;
         [SerializeField] private TextMeshProUGUI txtAttack;
         [SerializeField] private TextMeshProUGUI txtDefence;
         [SerializeField] private TextMeshProUGUI txtMoveSpeed;
+        [SerializeField] private GameObject objItemInfo;
+
+
+        protected override void OnLoad()
+        {
+            equipmentInventory.SetInventory();
+            begInvenotry.SetInventory();
+        }
 
         protected override void OnEnter()
         {
             AddMessage();
-
+            objItemInfo.SetActive(false);
         }
 
         private void AddMessage()
         {
-            Message.AddListener<UIInventoryMsg>(UIInventory);
             Message.AddListener<UIInventoryStatusMsg>(UIInventoryStatus);
+            Message.AddListener<UIItemInfoMsg>(UIItemInfo);
+            Message.AddListener<UIItemInfoCloseMsg>(UIItemInfoClose);
         }
 
-        private void UIInventory(UIInventoryMsg msg)
-        {
-            RefreshInventoryItems(msg.listItem);
-        }
 
-        private void RefreshInventoryItems(LinkedList<IItem> items)
-        {
-            int x = 0;
-            int y = 0;
-            float itemSlotCellSize = 120f;
-
-            for (int i = 0; i < itemSlotContainer.gameObject.transform.childCount - 1; i++)
-                Destroy(itemSlotContainer.transform.GetChild(i + 1).gameObject);
-
-            foreach (var o in items)
-            {
-                RectTransform itemSlotRectTransform = Instantiate(itemSlotTemplate, itemSlotContainer).GetComponent<RectTransform>();
-
-                itemSlotRectTransform.gameObject.SetActive(true);
-                itemSlotRectTransform.gameObject.transform.parent = itemSlotContainer;
-                itemSlotRectTransform.gameObject.transform.GetChild(1).GetComponent<UIItem>().Init_UIItem(o, o.ItemName, o.ItemComment, o.ItemKind, o.ItemType, o.Sprite);
-                itemSlotRectTransform.anchoredPosition = new Vector2(x * itemSlotCellSize, -y * itemSlotCellSize);
-                TextMeshProUGUI uiText = itemSlotRectTransform.Find("ImgDragItem").Find("txtCount").GetComponent<TextMeshProUGUI>();
-
-                if (o.Count > 1)
-                    uiText.SetText(o.Count.ToString());
-                else
-                    uiText.SetText("");
-
-                x++;
-                if (x > 3)
-                {
-                    x = 0;
-                    y++;
-                }
-            }
-        }
 
         private void UIInventoryStatus(UIInventoryStatusMsg msg)
         {
@@ -77,12 +50,25 @@ namespace JHchoi.UI
             txtDefence.SetText("Defence : " + msg.defence.ToString());
             txtMoveSpeed.SetText("MoveSpeed : " + msg.moveSpeed.ToString());
         }
+        private void UIItemInfo(UIItemInfoMsg msg)
+        {
+            objItemInfo.SetActive(true);
+            objItemInfo.GetComponentInChildren<Image>().sprite = msg.itemSprite;
+            objItemInfo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = msg.itemName;
+            objItemInfo.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = msg.itemInfo;
+        }
+
+        private void UIItemInfoClose(UIItemInfoCloseMsg msg)
+        {
+            objItemInfo.SetActive(false);
+        }
 
 
         protected override void OnExit()
         {
-            Message.RemoveListener<UIInventoryMsg>(UIInventory);
             Message.RemoveListener<UIInventoryStatusMsg>(UIInventoryStatus);
+            Message.RemoveListener<UIItemInfoMsg>(UIItemInfo);
+            Message.RemoveListener<UIItemInfoCloseMsg>(UIItemInfoClose);
         }
     }
 }

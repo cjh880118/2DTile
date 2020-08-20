@@ -43,16 +43,6 @@ namespace JHchoi.UI.Event
         }
     }
 
-    public class UIInventoryMsg : Message
-    {
-        public LinkedList<IItem> listItem;
-        public Inventory inventory;
-        public UIInventoryMsg(LinkedList<IItem> _listItem)
-        {
-            listItem = _listItem;
-        }
-    }
-
     public class UIInventoryStatusMsg : Message
     {
         public string name;
@@ -72,16 +62,21 @@ namespace JHchoi.UI.Event
         }
     }
 
-    public class SlotItemMsg : Message
+    public class UIItemInfoMsg : Message
     {
-        public bool isEquip;
-        public ItemKind itemKind;
-        public SlotItemMsg(bool _isEquip, ItemKind _itemKind)
+        public Sprite itemSprite;
+        public string itemName;
+        public string itemInfo;
+        public UIItemInfoMsg(Sprite _sprite, string _name, string _info)
         {
-            isEquip = _isEquip;
-            itemKind = _itemKind;
+            itemSprite = _sprite;
+            itemName = _name;
+            itemInfo = _info;
         }
     }
+
+    public class UIItemInfoCloseMsg : Message { }
+
 
     public class LoadMapMsg : Message
     {
@@ -114,6 +109,8 @@ namespace JHchoi.UI.Event
 
 
 
+
+
     /// <summary>
     /// Item Message
     /// </summary>
@@ -126,19 +123,10 @@ namespace JHchoi.UI.Event
         }
     }
 
-    public class GainItemMsg : Message
+    public class AddItemMsg : Message
     {
-        public IItem item;
-        public GainItemMsg(IItem _item)
-        {
-            item = _item;
-        }
-    }
-
-    public class RemoveItemMsg : Message
-    {
-        public IItem item;
-        public RemoveItemMsg(IItem _item)
+        public GameObject item;
+        public AddItemMsg(GameObject _item)
         {
             item = _item;
         }

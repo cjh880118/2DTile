@@ -31,6 +31,41 @@ namespace JHchoi.Managers
             }));
         }
 
+        public void UpdateEquipment(Attribute[] attributes)
+        {
+            int tempAttack = 0;
+            int tempDefence = 0;
+            float tempMoveSpeed = 0;
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                Debug.Log(string.Concat("Item Type : ", attributes[i].type, " Item Value : ", attributes[i].value.ModifiedValue));
+                switch (attributes[i].type)
+                {
+                    case Status.Attack:
+                        tempAttack = attributes[i].value.ModifiedValue;
+                        break;
+                    case Status.Defence:
+                        tempDefence = attributes[i].value.ModifiedValue;
+                        break;
+                    case Status.MoveSpeed:
+                        tempMoveSpeed = attributes[i].value.ModifiedValue;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            SetItemStatus(tempAttack, tempDefence, tempMoveSpeed);
+        }
+
+        public void SetItemStatus(int _itemAttack, int _ItemDefence, float _ItemMoveSpeed)
+        {
+            player.PlayerItem.ItemAttack = _itemAttack;
+            player.PlayerItem.ItemDefence = _ItemDefence;
+            player.PlayerItem.ItemMoveSpeed = _ItemMoveSpeed;
+        }
+
+
+
         public string GetPlayerName()
         {
             return player.Name;
@@ -48,7 +83,7 @@ namespace JHchoi.Managers
 
         public int GetPlayerAttack()
         {
-            return player.Attack;
+            return player.TotalAttack;
         }
 
         public int GetPlayerDefence()
@@ -73,35 +108,5 @@ namespace JHchoi.Managers
             playerObject.transform.position = _pos;
         }
 
-        public void SetPlayerBattle(bool _isBattleOn)
-        {
-            player.IsBattleOn = _isBattleOn;
-        }
-
-
-        public void SetPlayerStartPosition(Vector2 _pos)
-        {
-            playerObject.transform.position = _pos;
-        }
-
-        public void UpgradeHp(int hp)
-        {
-            player.Hp += hp;
-        }
-
-        public void UpgradeMoveSpeed(float _moveSpeed)
-        {
-            player.MoveSpeed += _moveSpeed;
-        }
-
-        public void UpgradeAttack(int _attck)
-        {
-            player.Attack += _attck;
-        }
-
-        public void UpgradeDefence(int _defence)
-        {
-            player.Defecnce += _defence;
-        }
     }
 }
