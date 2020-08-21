@@ -1,4 +1,5 @@
-﻿using JHchoi.UI.Event;
+﻿using JHchoi.Contents;
+using JHchoi.UI.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace JHchoi.UI
     {
         Coroutine corShowMonsterHp;
 
+        [SerializeField] private UserInterface consumeInventory;
         [SerializeField] private Text txtPlayerName;
         [SerializeField] private Image imgPlayerHp;
 
@@ -23,6 +25,7 @@ namespace JHchoi.UI
 
         protected override void OnEnter()
         {
+            consumeInventory.SetInventory();
             AddMessage();
         }
 

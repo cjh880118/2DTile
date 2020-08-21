@@ -151,6 +151,7 @@ namespace JHchoi.Contents
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
+                inventoryManager.UseItem();
                 //todo..포션 사용
             }
         }

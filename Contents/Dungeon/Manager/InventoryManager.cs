@@ -12,13 +12,24 @@ namespace JHchoi.Managers
     public class InventoryManager : IManager
     {
         public delegate void SlotUpdated(Attribute[] attributes);
+
+        public ItemDatabaseObject database;
+
         public InventoryObject inventory;
         public InventoryObject equipment;
+        public InventoryObject consume;
+
+        public UserInterface inventoryInterface;
+        public UserInterface inventoryEquipment;
+        public UserInterface inventoryConsume;
+
         public Attribute[] attributes;
-        public SlotUpdated ItemUpdate;
+        public event SlotUpdated ItemUpdate;
 
         public override IEnumerator Load_Resource()
         {
+
+            UI.IDialog.RequestDialogEnter<UI.InventoryDialog>();
             for (int i = 0; i < attributes.Length; i++)
             {
                 attributes[i].SetParent(this);
@@ -30,9 +41,51 @@ namespace JHchoi.Managers
                 equipment.GetSlots[i].OnAfterUpdate += OnAfterSlotUpdate;
             }
 
+            inventoryConsume = GameObject.Find("imgPotion").GetComponent<UserInterface>();
+            inventoryInterface = GameObject.Find("ImgBagInventory").GetComponent<UserInterface>();
+            inventoryEquipment = GameObject.Find("ImgCharacterInventory").GetComponent<UserInterface>();
 
+            inventoryConsume.itemDestort += ItemDestory;
+            inventoryInterface.itemDestort += ItemDestory;
+            inventoryEquipment.itemDestort += ItemDestory;
+
+
+            UI.IDialog.RequestDialogExit<UI.InventoryDialog>();
             AddMessage();
             yield return null;
+        }
+
+        private void ItemDestory(InventoryType type, GameObject obj)
+        {
+            UserInterface tempInterface = null;
+
+            switch (type)
+            {
+                case InventoryType.Inventory:
+                    tempInterface = inventoryInterface;
+                    break;
+                case InventoryType.Equipment:
+                    tempInterface = inventoryEquipment;
+                    break;
+                case InventoryType.Consume:
+                    tempInterface = inventoryConsume;
+                    break;
+                default:
+                    break;
+            }
+
+            if (type == InventoryType.Inventory)
+            {
+                for (int i = 0; i < consume.GetSlots.Length; i++)
+                {
+                    if (consume.GetSlots[i].item == inventoryInterface.slotsOnInterface[obj].item)
+                        return;
+                }
+            }
+            else if (type == InventoryType.Equipment)
+                return;
+
+            tempInterface.slotsOnInterface[obj].RemoveItem();
         }
 
         public void OnBeforeSlotUpdate(InventorySlot _slot)
@@ -59,11 +112,8 @@ namespace JHchoi.Managers
                 default:
                     break;
             }
-            ItemUpdate.Invoke(attributes);
 
-            Debug.Log(attributes[0].value.BaseValue);
-            Debug.Log(attributes[0].value.ModifiedValue);
-            print("OnBeforeSlotUpdate");
+            ItemUpdate(attributes);
         }
         public void OnAfterSlotUpdate(InventorySlot _slot)
         {
@@ -92,10 +142,7 @@ namespace JHchoi.Managers
                     break;
             }
 
-            ItemUpdate.Invoke(attributes);
-            Debug.Log(attributes[0].value.BaseValue);
-            Debug.Log(attributes[0].value.ModifiedValue);
-            print("OnAfterSlotUpdate");
+            ItemUpdate(attributes);
         }
 
         private void AddMessage()
@@ -107,12 +154,26 @@ namespace JHchoi.Managers
 
         private void AddItem(AddItemMsg msg)
         {
-             var item = msg.item.GetComponent<GroundItem>();
+            var item = msg.item.GetComponent<GroundItem>();
+
             if (item)
             {
                 Item _item = new Item(item.item);
+
                 if (inventory.AddItem(_item, 1))
                 {
+                    if (item.item.type == Itemtype.HealPotion)
+                    {
+                        for (int i = 0; i < consume.GetSlots.Length; i++)
+                        {
+                            if (consume.GetSlots[i].item.Id == _item.Id)
+                            {
+                                consume.AddItem(_item, 1);
+                                break;
+                            }
+                        }
+                    }
+
                     Destroy(msg.item);
                 }
             }
@@ -127,15 +188,7 @@ namespace JHchoi.Managers
         private void Drop(ItemKind _itmeKind, Vector2 _dropPos)
         {
             //테스트
-            _itmeKind = ItemKind.Axe;
-
-            //int dropCount;// = 1;
-            //if (_itmeKind == ItemKind.Coin)
-            //    dropCount = UnityEngine.Random.Range(1, 5);
-            //else if (_itmeKind == ItemKind.HealPotion)
-            //    dropCount = UnityEngine.Random.Range(1, 3);
-
-
+            _itmeKind = ItemKind.HealPotion;
             string path = "Prefabs/Item/" + _itmeKind.ToString();
             var obj = Instantiate(Resources.Load(path) as GameObject);
             obj.transform.position = _dropPos;
@@ -147,10 +200,49 @@ namespace JHchoi.Managers
             Debug.Log(string.Concat(attribute.type, " was update! value is now ", attribute.value.ModifiedValue));
         }
 
+        public void UseItem()
+        {
+
+            for (int i = 0; i < consume.GetSlots.Length; i++)
+            {
+                if (consume.GetSlots[i].ItemObject == null)
+                    return;
+
+                if (consume.GetSlots[i].ItemObject.equipSlot == EquipSlot.Consume)
+                {
+                    if (consume.GetSlots[i].amount > 0)
+                    {
+                        Debug.Log(consume.GetSlots[i].ItemObject.recoverHp);
+                        if (consume.GetSlots[i].amount == 1)
+                        {
+                            for (int j = 0; j < inventory.GetSlots.Length; j++)
+                            {
+                                if(inventory.GetSlots[j].item == consume.GetSlots[i].item)
+                                {
+                                    inventory.GetSlots[j].RemoveItem();
+                                    break;
+                                }
+                            }
+
+                            consume.GetSlots[i].RemoveItem();
+                        }
+                        else
+                        {
+                            consume.AddItem(consume.GetSlots[i].item, -1);
+                            inventory.AddItem(consume.GetSlots[i].item, -1);
+                        }
+                    }
+
+                    
+                }
+            }
+        }
+
         private void OnApplicationQuit()
         {
             inventory.Clear();
             equipment.Clear();
+            consume.Clear();
         }
 
         public Attribute[] GetAttribute()

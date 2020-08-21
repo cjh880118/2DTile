@@ -13,6 +13,7 @@ namespace JHchoi.Contents
     {
         Inventory,
         Equipment,
+        Consume,
     }
 
     [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
@@ -26,7 +27,7 @@ namespace JHchoi.Contents
 
         public bool AddItem(Item _item, int _amount)
         {
-            if (EmtpySlotCount <= 0)
+            if (EmtpySlotCount <= 0 && !database.ItemObjects[_item.Id].stackable)
                 return false;
 
             InventorySlot slot = FindItemOnInventory(_item);
@@ -81,13 +82,23 @@ namespace JHchoi.Contents
             return null;
         }
 
+        //item1 기존 item2 새로운
         public void SwapItems(InventorySlot item1, InventorySlot item2)
         {
             if (item2.CanPlaceInSlot(item1.ItemObject) && item1.CanPlaceInSlot(item2.ItemObject))
             {
-                InventorySlot temp = new InventorySlot(item2.item, item2.amount);
-                item2.UpdateSlot(item1.item, item1.amount);
-                item1.UpdateSlot(temp.item, temp.amount);
+                Debug.Log("item 1 : " + item1.parent.inventory.type);
+                Debug.Log("item 2 : " + item2.parent.inventory.type);
+
+                if (item2.parent.inventory.type == InventoryType.Consume)
+                    item2.UpdateSlot(item1.item, item1.amount);
+
+                else
+                {
+                    InventorySlot temp = new InventorySlot(item2.item, item2.amount);
+                    item2.UpdateSlot(item1.item, item1.amount);
+                    item1.UpdateSlot(temp.item, temp.amount);
+                }
             }
 
         }

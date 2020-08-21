@@ -46,6 +46,7 @@ public class ItemObject : ScriptableObject
     public EquipSlot equipSlot;
     [TextArea(15, 20)]
     public string description;
+    public int recoverHp;
     public Item data = new Item();
 
     public Item CreateItem()

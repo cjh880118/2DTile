@@ -12,6 +12,8 @@ namespace JHchoi.Contents
 {
     public abstract class UserInterface : MonoBehaviour
     {
+        public delegate void ItemDestory(InventoryType type, GameObject obj);
+        public event ItemDestory itemDestort;
         public InventoryObject inventory;
         public Dictionary<GameObject, InventorySlot> slotsOnInterface = new Dictionary<GameObject, InventorySlot>();
 
@@ -94,10 +96,10 @@ namespace JHchoi.Contents
         public void OnDragEnd(GameObject obj)
         {
             Destroy(MouseData.tempItemBegingDragged);
-
-            if (MouseData.interfaceMouseIsOver == null)
+            
+            if (MouseData.interfaceMouseIsOver == null || slotsOnInterface[obj].parent.inventory.type == InventoryType.Consume)
             {
-                slotsOnInterface[obj].RemoveItem();
+                itemDestort(inventory.type, obj);
                 return;
             }
 
