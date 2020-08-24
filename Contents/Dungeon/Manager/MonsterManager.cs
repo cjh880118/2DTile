@@ -4,42 +4,31 @@ using UnityEngine;
 using JHchoi.Models;
 using JHchoi.Constants;
 using JHchoi.Contents;
+using System;
 
 namespace JHchoi.Managers
 {
     public class MonsterManager : IManager
     {
-        MonsterModel monsterModel = Model.First<MonsterModel>();
         Dictionary<MonsterType, GameObject> DicMonsterObject = new Dictionary<MonsterType, GameObject>();
-
+        public delegate void EventHandler(object sender, EventArgs e);
+        public event EventHandler HitMonster;
 
         public void Init_Monster(GameObject _monsters)
         {
-            GameObject normalMonster = _monsters.transform.transform.GetChild(0).gameObject;
-            GameObject bossMonster = _monsters.transform.transform.GetChild(1).gameObject;
 
-
-            for (int i = 0; i < normalMonster.transform.childCount; i++)
+            for (int i = 0; i < _monsters.transform.childCount; i++)
             {
-                MonsterType monsterType = normalMonster.transform.GetChild(i).GetComponent<IMonster>().MonsterType;
-                normalMonster.transform.GetChild(i).GetComponent<IMonster>().Init_Monster(
-                    monsterModel.GetMonsterName(monsterType),
-                    monsterModel.GetMonsterHp(monsterType),
-                    monsterModel.GetMonsterMoveSpeed(monsterType),
-                    monsterModel.GetMonsterAttackDamage(monsterType)
-                    );
-            }
-
-            for (int i = 0; i < bossMonster.transform.childCount; i++)
-            {
-                MonsterType monsterType = bossMonster.transform.GetChild(i).GetComponent<IBossMonster>().MonsterType;
-                bossMonster.transform.GetChild(i).GetComponent<IBossMonster>().Init_Monster(monsterModel.GetMonsterName(monsterType),
-                    monsterModel.GetMonsterHp(monsterType),
-                    monsterModel.GetMonsterMoveSpeed(monsterType),
-                    monsterModel.GetMonsterAttackDamage(monsterType)
-                    );
+                _monsters.transform.GetChild(i).GetComponent<IMonster>().EventHitMonster += HitMonsters;
             }
         }
+
+        private void HitMonsters(object sender, EventArgs e)
+        {
+            Debug.Log(string.Concat(sender.ToString(), "         :   ", e.ToString()));
+            HitMonster?.Invoke(this, e);
+        }
+
 
         public void MonsterClear()
         {

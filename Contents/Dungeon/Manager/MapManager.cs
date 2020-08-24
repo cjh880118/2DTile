@@ -11,12 +11,11 @@ namespace JHchoi.Managers
 {
     public class MapManager : IManager
     {
-        MapModel mapModel = Model.First<MapModel>();
         private GameObject mapObject;
-        private MapType nowMap;
         private bool isLoadComplete;
-        public MapType NowMap { get => nowMap; set => nowMap = value; }
-        public bool IsLoadComplete { get => isLoadComplete; set => isLoadComplete = value; }
+        public bool IsLoadComplete { get => isLoadComplete; }
+        public delegate void EventHandler(UnityEngine.Object sender, MapMovePointType type);
+        public event EventHandler EvnetMapMove;
 
         public override IEnumerator Load_Resource(string name)
         {
@@ -26,21 +25,27 @@ namespace JHchoi.Managers
             string path = "Prefabs/Map/" + name;
             yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
             {
-                nowMap = (MapType)Enum.Parse(typeof(MapType), name);
                 mapObject = Instantiate(o) as GameObject;
                 mapObject.transform.parent = transform;
                 mapObject.name = name;
-                mapObject.GetComponent<IMap>().InitMap(mapModel.GetStartPos(nowMap), mapModel.GetIsBattleOn(nowMap));
-                Message.Send<CameraLimitMsg>(new CameraLimitMsg(
-                    mapModel.GetCameraMinX(nowMap),
-                    mapModel.GetCameraMaxX(nowMap),
-                    mapModel.GetCameraMinY(nowMap),
-                    mapModel.GetCameraMaxY(nowMap)
-                    )); ;
+                Message.Send<CameraLimitMsg>(new CameraLimitMsg(mapObject.GetComponent<IMap>().GetCameraLimit()));
 
+                var obj = mapObject.transform.Find("MapMovePoint");
+
+                for(int i = 0; i < obj.transform.childCount; i++)
+                {
+                    if(obj.transform.GetChild(i).gameObject.activeSelf)
+                        obj.transform.GetChild(i).gameObject.GetComponentInChildren<MapMovePoint>().MoveMap += MoveMapEvent;
+                }
+                    
             }));
 
             isLoadComplete = true;
+        }
+
+        private void MoveMapEvent(object sender, MapMovePointType type)
+        {
+            EvnetMapMove?.Invoke(this, type);
         }
 
         public void ClearMap()
@@ -57,6 +62,11 @@ namespace JHchoi.Managers
         public Vector2 GetStartPos()
         {
             return mapObject.GetComponent<IMap>().StartPos;
+        }
+
+        public Vector2 GetEndPos()
+        {
+            return mapObject.GetComponent<IMap>().EndPos;
         }
 
         public GameObject GetMonsters()

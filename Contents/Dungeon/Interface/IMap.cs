@@ -1,4 +1,5 @@
 ﻿using JHchoi.Constants;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,21 +8,23 @@ namespace JHchoi.Contents
 {
     public abstract class IMap : MonoBehaviour
     {
+        public MapObject mapObject;
+
         [SerializeField] protected MapType MapType;
         [SerializeField] private GameObject monsters;
         [SerializeField] private GameObject npcs;
-        private bool isBattleMap;
-        private Vector2 startPos;
+        [SerializeField] private GameObject mapMove;
 
-        public bool IsBattleMap { get => isBattleMap; set => isBattleMap = value; }
-        public Vector2 StartPos { get => startPos; set => startPos = value; }
-        public GameObject Monsters { get => monsters; set => monsters = value; }
-        public GameObject Npcs { get => npcs; set => npcs = value; }
+        public bool IsBattleMap { get => mapObject.isBattleAble; }
+        public Vector2 StartPos { get => mapObject.startPos; }
+        public Vector2 EndPos { get => mapObject.endPos; }
 
-        public virtual void InitMap( Vector2 _startPos, bool _isBattlePossible)
+        public GameObject Monsters { get => monsters; }
+        public GameObject Npcs { get => npcs; }
+
+        public MapCameraLimit GetCameraLimit()
         {
-            startPos = _startPos;
-            isBattleMap = _isBattlePossible;
+            return mapObject.CameraLimit;
         }
     }
 }

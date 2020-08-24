@@ -78,37 +78,26 @@ namespace JHchoi.UI.Event
     public class UIItemInfoCloseMsg : Message { }
 
 
-    public class LoadMapMsg : Message
-    {
-        public MapType map;
-        public LoadMapMsg(MapType _map)
-        {
-            map = _map;
-        }
-    }
-
-    public class CameraShakeMsg : Message { }
+    //public class LoadMapMsg : Message
+    //{
+    //    public MapType map;
+    //    public LoadMapMsg(MapType _map)
+    //    {
+    //        map = _map;
+    //    }
+    //}
 
     public class BloodEffectMsg : Message { }
 
     public class CameraLimitMsg : Message
     {
-        public float minX;
-        public float maxX;
-        public float minY;
-        public float maxY;
+        public MapCameraLimit cameraLimit;
 
-        public CameraLimitMsg(float _minX, float _maxX, float _minY, float _maxY)
+        public CameraLimitMsg(MapCameraLimit _cameraLimit)
         {
-            minX = _minX;
-            maxX = _maxX;
-            minY = _minY;
-            maxY = _maxY;
+            cameraLimit = _cameraLimit;
         }
     }
-
-
-
 
 
     /// <summary>

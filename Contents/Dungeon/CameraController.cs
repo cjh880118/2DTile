@@ -21,23 +21,27 @@ public class CameraController : MonoBehaviour
 
     void AddMessage()
     {
-        Message.AddListener<CameraShakeMsg>(CameraShake);
         Message.AddListener<CameraLimitMsg>(CameraLimit);
     }
 
     private void CameraLimit(CameraLimitMsg msg)
     {
         target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        minX = msg.minX;
-        maxX = msg.maxX;
-        minY = msg.minY;
-        maxY = msg.maxY;
+        minX = msg.cameraLimit.Camera_Min_X;
+        maxX = msg.cameraLimit.Camera_Max_X;
+        minY = msg.cameraLimit.Camera_Min_Y;
+        maxY = msg.cameraLimit.Camera_Max_Y;
     }
 
-    private void CameraShake(CameraShakeMsg msg)
+    public void CameraShake()
     {
         StartCoroutine(Shake(0.1f, 0.1f));
     }
+
+    //private void CameraShake(CameraShakeMsg msg)
+    //{
+    //    StartCoroutine(Shake(0.1f, 0.1f));
+    //}
 
     public IEnumerator Shake(float _amount, float _duration)
     {

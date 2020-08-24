@@ -137,14 +137,7 @@ namespace JHchoi.Contents
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
-
-            if (collision.collider.tag == "BossMonster" && isHitAble)
-            {
-                player.hp -= (collision.collider.GetComponent<IBossMonster>().AttackDamage - Defecnce);
-                Message.Send<BloodEffectMsg>(new BloodEffectMsg());
-                StartCoroutine(RecoveryTime());
-            }
-
+       
             if (collision.collider.tag == "MonsterBullet" && isHitAble)
             {
                 player.hp -= (collision.collider.GetComponent<IMagic>().Damage - Defecnce);

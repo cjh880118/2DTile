@@ -13,28 +13,17 @@ namespace JHchoi.Constants
         Npc,
     }
 
-    public enum Direction
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
-
-    public enum PlayerStatus
-    {
-        Idle,
-        Move,
-        Atk,
-        Hit,
-        Die
-    }
-
     public enum MapType
     {
         Stage1_1,
         Stage1_2,
         Stage1_3,
+    }
+
+    public enum MapMovePointType
+    {
+        Start,
+        End,
     }
 
     public enum MonsterType
@@ -51,7 +40,15 @@ namespace JHchoi.Constants
         Warrior
     }
 
-    public enum ItemKind
+
+    public enum InventoryType
+    {
+        Inventory,
+        Equipment,
+        Consume,
+    }
+
+    public enum Itemtype
     {
         Sword,
         Hammer,
@@ -62,19 +59,26 @@ namespace JHchoi.Constants
         SteelArmor,
         Cap,
         Necklace,
-        boots,
+        Boots,
         HealPotion,
         Coin,
-        End
+        End,
     }
 
-    public enum ItemType
+    public enum Status
     {
-        Gold,
+        Attack,
+        Defence,
+        MoveSpeed,
+    }
+
+    public enum EquipSlot
+    {
         Weapon,
         Armor,
         Accessory,
         Consume,
+        ETC,
     }
 
 }

@@ -6,16 +6,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEditor;
 using System.Runtime.Serialization;
+using JHchoi.Constants;
 
 namespace JHchoi.Contents
 {
-    public enum InventoryType
-    {
-        Inventory,
-        Equipment,
-        Consume,
-    }
-
     [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
     public class InventoryObject : ScriptableObject
     {

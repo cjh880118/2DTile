@@ -13,7 +13,7 @@ namespace JHchoi.Managers
     {
         public delegate void SlotUpdated(Attribute[] attributes);
 
-        public ItemDatabaseObject database;
+        //public ItemDatabaseObject database;
 
         public InventoryObject inventory;
         public InventoryObject equipment;
@@ -181,14 +181,14 @@ namespace JHchoi.Managers
 
         private void DropItem(DropItemMsg msg)
         {
-            int itemKind = UnityEngine.Random.Range((int)ItemKind.Sword, (int)ItemKind.End);
-            Drop((ItemKind)itemKind, msg.dropPos);
+            int itemKind = UnityEngine.Random.Range((int)Itemtype.Sword, (int)Itemtype.End);
+            Drop((Itemtype)itemKind, msg.dropPos);
         }
 
-        private void Drop(ItemKind _itmeKind, Vector2 _dropPos)
+        private void Drop(Itemtype _itmeKind, Vector2 _dropPos)
         {
             //테스트
-            _itmeKind = ItemKind.HealPotion;
+            _itmeKind = Itemtype.HealPotion;
             string path = "Prefabs/Item/" + _itmeKind.ToString();
             var obj = Instantiate(Resources.Load(path) as GameObject);
             obj.transform.position = _dropPos;

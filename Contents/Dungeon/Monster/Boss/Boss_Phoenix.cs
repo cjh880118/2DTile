@@ -5,7 +5,7 @@ using DG.Tweening;
 
 namespace JHchoi.Contents
 {
-    public class Boss_Phoenix : IBossMonster
+    public class Boss_Phoenix : BossMonsterInterface
     {
         delegate void MoveDelegate();
         MoveDelegate moveDelegate;
@@ -13,25 +13,6 @@ namespace JHchoi.Contents
         public GameObject bullet2_Prefab;
         public GameObject bullet3_Prefab;
         
-
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            //Move_Pattern_1();
-            //StartCoroutine(Test());
-            //Move_Pattern_2();
-            //StartCoroutine(AroundShoot(0));
-            //StartCoroutine(AroundShoot(45));
-            //StartCoroutine(AroundShoot(90));
-            //StartCoroutine(AroundShoot(135));
-            //StartCoroutine(AroundShoot(180));
-            //StartCoroutine(AroundShoot(225));
-            //StartCoroutine(AroundShoot(270));
-            //StartCoroutine(AroundShoot(315));
-            StartCoroutine(CircleShoot());
-        }
-
 
         //좌우 패트롤
         protected override void Move_Pattern_1()

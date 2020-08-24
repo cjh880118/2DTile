@@ -4,24 +4,9 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Demon_Monster : IMonster
+    public class Demon_Monster : NormalMonsterInterface
     {
-
-        protected override void Attack_Pattern1()
-        {
-        }
-
-        protected override void Attack_Pattern2()
-        {
-        }
-
-        protected override void Attack_Pattern3()
-        {
-        }
-
-        protected override void Move()
-        {
-            base.Move();
-        }
+        
+     
     }
 }

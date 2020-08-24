@@ -4,25 +4,8 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Ogre_Monster : IMonster
+    public class Ogre_Monster : NormalMonsterInterface
     {
 
-        protected override void Attack_Pattern1()
-        {
-        }
-
-        protected override void Attack_Pattern2()
-        {
-        }
-
-        protected override void Attack_Pattern3()
-        {
-        }
-
-
-        protected override void Move()
-        {
-            base.Move();
-        }
     }
 }

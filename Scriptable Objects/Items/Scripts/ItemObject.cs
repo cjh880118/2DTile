@@ -1,39 +1,8 @@
-﻿using System;
+﻿using JHchoi.Constants;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum Itemtype
-{
-    Sword,
-    Hammer,
-    Axe,
-    Dagger,
-    Robe,
-    LeatherArmor,
-    SteelArmor,
-    Cap,
-    Necklace,
-    Boots,
-    HealPotion,
-    Coin,
-}
-
-public enum Status
-{
-    Attack,
-    Defence,
-    MoveSpeed,
-}
-
-public enum EquipSlot
-{
-    Weapon,
-    Armor,
-    Accessory,
-    Consume,
-    ETC,
-}
 
 
 
