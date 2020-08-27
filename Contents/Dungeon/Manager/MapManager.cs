@@ -32,15 +32,20 @@ namespace JHchoi.Managers
 
                 var obj = mapObject.transform.Find("MapMovePoint");
 
-                for(int i = 0; i < obj.transform.childCount; i++)
+                for (int i = 0; i < obj.transform.childCount; i++)
                 {
-                    if(obj.transform.GetChild(i).gameObject.activeSelf)
+                    if (obj.transform.GetChild(i).gameObject.activeSelf)
                         obj.transform.GetChild(i).gameObject.GetComponentInChildren<MapMovePoint>().MoveMap += MoveMapEvent;
                 }
-                    
+
             }));
 
             isLoadComplete = true;
+        }
+
+        public void MapClear()
+        {
+            Debug.Log("MapClear");
         }
 
         private void MoveMapEvent(object sender, MapMovePointType type)
@@ -77,6 +82,11 @@ namespace JHchoi.Managers
         public GameObject GetNpcs()
         {
             return mapObject.GetComponent<IMap>().Npcs;
+        }
+
+        public bool GetIsBossMap()
+        {
+            return mapObject.GetComponent<IMap>().IsBossMap;
         }
 
     }

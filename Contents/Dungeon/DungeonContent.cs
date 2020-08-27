@@ -45,7 +45,7 @@ namespace JHchoi.Contents
                 _mapManger.transform.parent = transform;
                 mapManager = _mapManger.GetComponent<MapManager>();
                 Managers.Add(ManagerType.Map, _mapManger);
-                mapManager.EvnetMapMove += MapMove;
+                
             }));
 
             path = "Manager/PlayerManager";
@@ -74,13 +74,10 @@ namespace JHchoi.Contents
                 var _monsterManager = Instantiate(o) as GameObject;
                 _monsterManager.transform.parent = transform;
                 monsterManager = _monsterManager.GetComponent<MonsterManager>();
-                monsterManager.HitMonster += CameraShake;
                 Managers.Add(ManagerType.Monster, _monsterManager);
                 StartCoroutine(_monsterManager.GetComponent<MonsterManager>().Load_Resource());
-
-
+                
             }));
-
 
             path = "manager/inventorymanager";
             yield return StartCoroutine(ResourceLoader.Instance.Load<GameObject>(path, o =>
@@ -90,9 +87,15 @@ namespace JHchoi.Contents
                 inventoryManager = _inventorymanager.GetComponent<InventoryManager>();
                 Managers.Add(ManagerType.Inventory, _inventorymanager);
                 StartCoroutine(_inventorymanager.GetComponent<InventoryManager>().Load_Resource());
-                inventoryManager.ItemUpdate += ItemUpdate;
+                
             }));
 
+            //Event
+            mapManager.EvnetMapMove += MapMove;
+            monsterManager.EventMonsterHit += MonsterHit;
+            playerManager.player.EvnetPlayerDie += PlayerDie;
+            inventoryManager.ItemUpdate += ItemUpdate;
+            inventoryManager.EvnetUsePotion += UsePotion;
 
             SetLoadComplete();
         }
@@ -107,14 +110,11 @@ namespace JHchoi.Contents
             StartCoroutine(LoadMap(NowMapType, type));
         }
 
-        private void CameraShake(object sender, EventArgs e)
-        {
-            MainCamera.GetComponent<CameraController>().CameraShake();
-        }
 
         private void ItemUpdate(Managers.Attribute[] attributes)
         {
             playerManager.UpdateEquipment(attributes);
+
             Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
                    playerManager.GetPlayerMaxHp(),
                    playerManager.GetPlayerHp(),
@@ -124,32 +124,47 @@ namespace JHchoi.Contents
                    ));
         }
 
+        private void MonsterHit(object sender, bool _isAllDie)
+        {
+            MainCamera.GetComponent<CameraController>().CameraShake();
+
+            if (_isAllDie && mapManager.GetIsBossMap())
+            {
+                UI.IDialog.RequestDialogEnter<UI.EndDialog>();
+                Message.Send<UIEndGameMsg>(new UIEndGameMsg("Game Clear"));
+            }
+        }
+
+        private void PlayerDie(object sender, EventArgs e)
+        {
+            UI.IDialog.RequestDialogEnter<UI.EndDialog>();
+            Message.Send<UIEndGameMsg>(new UIEndGameMsg("Game Over"));
+        }
+
+        private void UsePotion(object sender, ConsumeItem _consumeItem)
+        {
+            playerManager.UsePotion(_consumeItem.Hp, _consumeItem.Mp);
+
+            Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(playerManager.GetPlayerName(), playerManager.GetPlayerMaxHp(), playerManager.GetPlayerHp()));
+
+            Message.Send<UIInventoryStatusMsg>(new UIInventoryStatusMsg(playerManager.GetPlayerName(),
+                    playerManager.GetPlayerMaxHp(),
+                    playerManager.GetPlayerHp(),
+                    playerManager.GetPlayerAttack(),
+                    playerManager.GetPlayerDefence(),
+                    playerManager.GetPlayerMoveSpeed()
+                    ));
+        }
+
         protected override void OnEnter()
         {
-            //AddMessage();
             NowMapType = MapType.Stage1_1;
             StartCoroutine(LoadMap(NowMapType, MapMovePointType.End));
-            //LoadMap(new LoadMapMsg(NowMapType));
         }
 
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Alpha0))
-            //{
-            //    NowMapType = MapType.Stage1_1;
-            //    LoadMap(new LoadMapMsg(NowMapType));
-            //}
-            //else if (Input.GetKeyDown(KeyCode.Alpha9))
-            //{
-            //    NowMapType = MapType.Stage1_2;
-            //    LoadMap(new LoadMapMsg(NowMapType));
-            //}
-            //else if (Input.GetKeyDown(KeyCode.Alpha8))
-            //{
-            //    NowMapType = MapType.Stage1_3;
-            //    LoadMap(new LoadMapMsg(NowMapType));
-            //}
             if (Input.GetKeyDown(KeyCode.B))
             {
                 if (!isInventoryOpen)
@@ -175,23 +190,12 @@ namespace JHchoi.Contents
             else if (Input.GetKeyDown(KeyCode.Q))
             {
                 inventoryManager.UseItem();
-                //todo..포션 사용
             }
         }
 
-        //private void AddMessage()
-        //{
-        //    Message.AddListener<LoadMapMsg>(LoadMap);
-        //}
-
-
-        //private void LoadMap(LoadMapMsg msg)
-        //{
-        //    StartCoroutine(LoadMap(msg.map));
-        //}
-
         IEnumerator LoadMap(MapType _mapType, MapMovePointType _pointType)
         {
+            Message.Send<FadeInMsg>(new FadeInMsg());
             yield return StartCoroutine(mapManager.Load_Resource(_mapType.ToString()));
 
             while (!mapManager.IsLoadComplete)
@@ -224,17 +228,13 @@ namespace JHchoi.Contents
                 startPos = mapManager.GetEndPos();
 
             playerManager.SetPlayerInMap(mapManager.GetBattlePossible(), startPos);
+            Message.Send<FadeOutMsg>(new FadeOutMsg());
         }
 
 
         protected override void OnExit()
         {
-            RemoveMessage();
         }
 
-        private void RemoveMessage()
-        {
-            //Message.RemoveListener<LoadMapMsg>(LoadMap);
-        }
     }
 }

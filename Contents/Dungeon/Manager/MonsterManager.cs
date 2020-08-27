@@ -11,22 +11,39 @@ namespace JHchoi.Managers
     public class MonsterManager : IManager
     {
         Dictionary<MonsterType, GameObject> DicMonsterObject = new Dictionary<MonsterType, GameObject>();
-        public delegate void EventHandler(object sender, EventArgs e);
-        public event EventHandler HitMonster;
+        public delegate void EventHandler(object sender, bool isAllDie);
+        public event EventHandler EventMonsterHit;
+    
+        GameObject objMonsters;
+        int monsterCount;
 
         public void Init_Monster(GameObject _monsters)
         {
-
-            for (int i = 0; i < _monsters.transform.childCount; i++)
+            objMonsters = _monsters;
+            for (int i = 0; i < objMonsters.transform.childCount; i++)
             {
-                _monsters.transform.GetChild(i).GetComponent<IMonster>().EventHitMonster += HitMonsters;
+                objMonsters.transform.GetChild(i).GetComponent<IMonster>().EventHitMonster += HitMonsters;
             }
         }
 
-        private void HitMonsters(object sender, EventArgs e)
+
+        private void HitMonsters(object sender, MonsterInfo _info)
         {
-            Debug.Log(string.Concat(sender.ToString(), "         :   ", e.ToString()));
-            HitMonster?.Invoke(this, e);
+            if (_info.hp > 0)
+                EventMonsterHit?.Invoke(this, false);
+            else
+                StartCoroutine(MonsterCountCheck(_info.objMonster));
+        }
+
+        IEnumerator MonsterCountCheck(GameObject obj)
+        {
+            Destroy(obj);
+            yield return new WaitForSeconds(3.0f);
+            monsterCount = objMonsters.transform.childCount;
+            Debug.Log("Monster count : " + monsterCount);
+
+            if (monsterCount <= 0)
+                EventMonsterHit?.Invoke(this, true);
         }
 
 

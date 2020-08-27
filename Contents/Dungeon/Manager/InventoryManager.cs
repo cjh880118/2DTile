@@ -12,6 +12,10 @@ namespace JHchoi.Managers
     public class InventoryManager : IManager
     {
         public delegate void SlotUpdated(Attribute[] attributes);
+        public event SlotUpdated ItemUpdate;
+
+        public delegate void EventHandler(object sender, ConsumeItem e);
+        public event EventHandler EvnetUsePotion;
 
         //public ItemDatabaseObject database;
 
@@ -24,11 +28,11 @@ namespace JHchoi.Managers
         public UserInterface inventoryConsume;
 
         public Attribute[] attributes;
-        public event SlotUpdated ItemUpdate;
 
+
+        GameObject manager;
         public override IEnumerator Load_Resource()
         {
-
             UI.IDialog.RequestDialogEnter<UI.InventoryDialog>();
             for (int i = 0; i < attributes.Length; i++)
             {
@@ -51,6 +55,11 @@ namespace JHchoi.Managers
 
 
             UI.IDialog.RequestDialogExit<UI.InventoryDialog>();
+
+            manager = this.gameObject;
+            inventory.Clear();
+            equipment.Clear();
+            consume.Clear();
             AddMessage();
             yield return null;
         }
@@ -188,11 +197,10 @@ namespace JHchoi.Managers
         private void Drop(Itemtype _itmeKind, Vector2 _dropPos)
         {
             //테스트
-            _itmeKind = Itemtype.HealPotion;
             string path = "Prefabs/Item/" + _itmeKind.ToString();
             var obj = Instantiate(Resources.Load(path) as GameObject);
             obj.transform.position = _dropPos;
-            obj.transform.parent = transform;
+            obj.transform.SetParent(manager.transform);
 
         }
         public void AttributeModified(Attribute attribute)
@@ -212,12 +220,13 @@ namespace JHchoi.Managers
                 {
                     if (consume.GetSlots[i].amount > 0)
                     {
-                        Debug.Log(consume.GetSlots[i].ItemObject.recoverHp);
+                        EvnetUsePotion?.Invoke(this, new ConsumeItem(consume.GetSlots[i].ItemObject.recoverHp, 0));
+
                         if (consume.GetSlots[i].amount == 1)
                         {
                             for (int j = 0; j < inventory.GetSlots.Length; j++)
                             {
-                                if(inventory.GetSlots[j].item == consume.GetSlots[i].item)
+                                if (inventory.GetSlots[j].item == consume.GetSlots[i].item)
                                 {
                                     inventory.GetSlots[j].RemoveItem();
                                     break;
@@ -231,12 +240,13 @@ namespace JHchoi.Managers
                             consume.AddItem(consume.GetSlots[i].item, -1);
                             inventory.AddItem(consume.GetSlots[i].item, -1);
                         }
-                    }
 
-                    
+                        
+                    }
                 }
             }
         }
+
 
         private void OnApplicationQuit()
         {
@@ -268,6 +278,18 @@ namespace JHchoi.Managers
         public void AttributeModified()
         {
             parent.AttributeModified(this);
+        }
+    }
+
+    public class ConsumeItem : EventArgs
+    {
+        public int Hp;
+        public int Mp;
+
+        public ConsumeItem(int _hp, int _mp)
+        {
+            Hp = _hp;
+            Mp = _mp;
         }
     }
 }

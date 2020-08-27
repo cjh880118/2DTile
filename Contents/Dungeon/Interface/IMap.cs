@@ -10,7 +10,7 @@ namespace JHchoi.Contents
     {
         public MapObject mapObject;
 
-        [SerializeField] protected MapType MapType;
+        [SerializeField] private MapType MapType;
         [SerializeField] private GameObject monsters;
         [SerializeField] private GameObject npcs;
         [SerializeField] private GameObject mapMove;
@@ -19,6 +19,8 @@ namespace JHchoi.Contents
         public Vector2 StartPos { get => mapObject.startPos; }
         public Vector2 EndPos { get => mapObject.endPos; }
 
+        public bool IsBossMap { get => mapObject.isBossMap; }
+
         public GameObject Monsters { get => monsters; }
         public GameObject Npcs { get => npcs; }
 
@@ -26,5 +28,6 @@ namespace JHchoi.Contents
         {
             return mapObject.CameraLimit;
         }
+
     }
 }

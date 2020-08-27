@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using JHchoi.Models;
 using JHchoi.Constants;
+using System;
 
 namespace JHchoi.Managers
 {
@@ -11,7 +12,7 @@ namespace JHchoi.Managers
     {
         PlayerModel playerModel = Model.First<PlayerModel>();
         GameObject playerObject;
-        IPlayer player;
+        public IPlayer player;
         public override IEnumerator Load_Resource()
         {
             string path = "Prefabs/Player/Witch";
@@ -28,8 +29,10 @@ namespace JHchoi.Managers
                     playerModel.GetPlayerAttackDamage(PlayerType.Witch),
                     playerModel.GetPlayerDefence(PlayerType.Witch)
                     );
+
             }));
         }
+
 
         public void UpdateEquipment(Attribute[] attributes)
         {
@@ -64,6 +67,10 @@ namespace JHchoi.Managers
             player.PlayerItem.ItemMoveSpeed = _ItemMoveSpeed;
         }
 
+        public void UsePotion(int _hp, int _mp)
+        {
+            player.Hp += _hp;
+        }
 
 
         public string GetPlayerName()
@@ -105,7 +112,7 @@ namespace JHchoi.Managers
         public void SetPlayerInMap(bool _isBattleOn, Vector2 _pos)
         {
             player.IsBattleOn = _isBattleOn;
-            playerObject.transform.position = _pos;
+            playerObject.transform.localPosition = _pos;
         }
 
     }

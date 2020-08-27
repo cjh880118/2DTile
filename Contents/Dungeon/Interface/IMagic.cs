@@ -37,7 +37,7 @@ namespace JHchoi.Contents
                 transform.position += dirVec * moveSpeed * Time.deltaTime;
             }
 
-            if(this.gameObject.tag == "Bullet")
+            if (this.gameObject.tag == "Bullet")
             {
                 ViewportOutCheck();
             }
@@ -61,6 +61,12 @@ namespace JHchoi.Contents
         {
             yield return new WaitForSeconds(3.0f);
             Destroy(this.gameObject);
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.collider.tag == "Obstacle")
+                Destroy(this.gameObject);
         }
     }
 }

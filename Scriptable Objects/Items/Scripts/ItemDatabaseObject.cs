@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item Database", menuName = "Inventory Syste/Item/Database")]
-public class ItemDatabaseObject : ScriptableObject, ISerializationCallbackReceiver
+public class ItemDatabaseObject : ScriptableObject
 {
     public ItemObject[] ItemObjects;
 
@@ -17,13 +17,13 @@ public class ItemDatabaseObject : ScriptableObject, ISerializationCallbackReceiv
         }
     }
 
-    public void OnAfterDeserialize()
-    {
-        UpdateID();
-    }
+    //public void OnAfterDeserialize()
+    //{
+    //    UpdateID();
+    //}
 
-    public void OnBeforeSerialize()
-    {
+    //public void OnBeforeSerialize()
+    //{
 
-    }
+    //}
 }

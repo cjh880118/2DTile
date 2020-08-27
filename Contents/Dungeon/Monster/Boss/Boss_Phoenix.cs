@@ -12,7 +12,12 @@ namespace JHchoi.Contents
         public GameObject bullet1_Prefab;
         public GameObject bullet2_Prefab;
         public GameObject bullet3_Prefab;
-        
+
+        protected override void MoveStart()
+        {
+            Move_Pattern_1();
+            StartCoroutine(CircleShoot());
+        }
 
         //좌우 패트롤
         protected override void Move_Pattern_1()

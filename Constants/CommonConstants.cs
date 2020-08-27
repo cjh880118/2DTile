@@ -28,26 +28,6 @@ namespace JHchoi.Constants
         Max
     }
 
-    public enum CharAniType
-    {
-        Idle,
-        LeftHeadStrongDamage,
-        leftHeadSoftDamage,
-        RightHeadStrongDamage,
-        RightHeadSoftDamage,
-        BodyCenterStrongDamage,
-        BodyCenterSoftDamage,
-        LeftStomachStrongDamage,
-        LeftStomachSoftDamage,
-        CenterStomachStrongDamage,
-        CenterStomachSoftDamage,
-        RightStomachStrongDamage,
-        RightStomachSoftDamage,
-
-        LeftHookAttack,
-        BodyBlock,
-    }
-
     public class PiezoData
     {
         public int Index = 0;

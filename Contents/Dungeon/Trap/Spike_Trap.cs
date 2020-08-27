@@ -29,7 +29,7 @@ public class Spike_Trap : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("TT");
+        //Debug.Log("TT");
     }
 
 }

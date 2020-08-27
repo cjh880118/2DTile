@@ -15,14 +15,14 @@ namespace JHchoi.Contents
             Message.Send<FadeOutMsg>(new FadeOutMsg());
             AddMessage();
             UI.IDialog.RequestDialogEnter<UI.ScreenTitleDialog>();
-            UI.IDialog.RequestDialogEnter<UI.KioskTitleDialog>();
+            UI.IDialog.RequestDialogEnter<UI.TitleDialog>();
         }
 
 		protected override void OnExit()
 		{
 			RemoveMessage();
             UI.IDialog.RequestDialogExit<UI.ScreenTitleDialog>();
-            UI.IDialog.RequestDialogExit<UI.KioskTitleDialog>();
+            UI.IDialog.RequestDialogExit<UI.TitleDialog>();
         }
 
 		void AddMessage()
@@ -44,7 +44,7 @@ namespace JHchoi.Contents
         {
             Message.Send<FadeInMsg>(new FadeInMsg());
             yield return new WaitForSeconds(0.5f);
-            Scene.SceneManager.Instance.Load(SceneName.Lobby);
+            Scene.SceneManager.Instance.Load(SceneName.Dungeon);
         }
     }
 }

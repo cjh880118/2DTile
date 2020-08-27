@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using JHchoi.Constants;
 using JHchoi.UI.Event;
+using System;
 
 namespace JHchoi.Contents
 {
@@ -23,11 +24,12 @@ namespace JHchoi.Contents
         public float ItemMoveSpeed;
     }
 
-
     public abstract class IPlayer : MonoBehaviour
     {
-        delegate void Use_Skill(Vector2 dir);
+        public delegate void EventHandler(object sender, EventArgs e);
+        public event EventHandler EvnetPlayerDie;
 
+        delegate void Use_Skill(Vector2 dir);
         private PlayerStatus player = new PlayerStatus();
         private ItemStatus playerItem = new ItemStatus();
 
@@ -55,11 +57,19 @@ namespace JHchoi.Contents
             player.defecnce = _defence;
         }
 
-        public int Hp { get => player.hp; }// set => player.hp = value; }
+        public int Hp
+        {
+            get => player.hp;
+            set
+            {
+                player.hp = value;
+                if (player.hp > MaxHp)
+                    player.hp = MaxHp;
+            }
+        }
         public float MoveSpeed { get => player.moveSpeed + playerItem.ItemMoveSpeed; }
-        public bool IsBattleOn { get => isBattleOn;  set => isBattleOn = value; }
+        public bool IsBattleOn { get => isBattleOn; set => isBattleOn = value; }
         public string Name { get => name; }
-        //set => name = value; }
         public int TotalAttack { get => player.attack + playerItem.ItemAttack; }
         public int MaxHp { get => player.maxHp; }
         public bool IsInventoryOpen { get => isInventoryOpen; set => isInventoryOpen = value; }
@@ -128,7 +138,11 @@ namespace JHchoi.Contents
         protected abstract void Skill_3(Vector2 _dir);
         protected abstract void OnShield();
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        //private void OnCollisionStay2D(Collision2D collision)
+        //{
+
+        //}
+        private void OnCollisionStay2D(Collision2D collision)
         {
 
             if (collision.collider.tag == "Monster" && isHitAble)
@@ -137,7 +151,7 @@ namespace JHchoi.Contents
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
-       
+
             if (collision.collider.tag == "MonsterBullet" && isHitAble)
             {
                 player.hp -= (collision.collider.GetComponent<IMagic>().Damage - Defecnce);
@@ -156,6 +170,12 @@ namespace JHchoi.Contents
                 player.hp -= (collision.collider.GetComponent<Spike_Trap>().Damage - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
+            }
+
+            if (player.hp <= 0)
+            {
+                Debug.Log("Game Over");
+                EvnetPlayerDie?.Invoke(this, new EventArgs());
             }
 
             Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(name, player.maxHp, player.hp));

@@ -77,15 +77,15 @@ namespace JHchoi.UI.Event
 
     public class UIItemInfoCloseMsg : Message { }
 
+    public class UIEndGameMsg : Message
+    {
+        public string message;
+        public UIEndGameMsg(string _msg)
+        {
+            message = _msg;
+        }
 
-    //public class LoadMapMsg : Message
-    //{
-    //    public MapType map;
-    //    public LoadMapMsg(MapType _map)
-    //    {
-    //        map = _map;
-    //    }
-    //}
+    }
 
     public class BloodEffectMsg : Message { }
 
