@@ -46,7 +46,6 @@ namespace JHchoi.Contents
         public void InitIPlayer(string _name, int _hp, float _moveSpeed, int _attack, int _defence)
         {
             Debug.Log("케릭터 초기화");
-            UI.IDialog.RequestDialogEnter<UI.BloodDialog>();
             Message.Send<UISkillMsg>(new UISkillMsg(skillNum));
             use_Skill = Skill_1;
             player.name = _name;
@@ -68,7 +67,7 @@ namespace JHchoi.Contents
             }
         }
         public float MoveSpeed { get => player.moveSpeed + playerItem.ItemMoveSpeed; }
-        public bool IsBattleOn { get => isBattleOn; set => isBattleOn = value; }
+        public bool IsBattleOn { set => isBattleOn = value; }
         public string Name { get => player.name; }
         public int TotalAttack { get => player.attack + playerItem.ItemAttack; }
         public int MaxHp { get => player.maxHp; }
@@ -138,13 +137,9 @@ namespace JHchoi.Contents
         protected abstract void Skill_3(Vector2 _dir);
         protected abstract void OnShield();
 
-        //private void OnCollisionStay2D(Collision2D collision)
-        //{
 
-        //}
-        private void OnCollisionStay2D(Collision2D collision)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-
             if (collision.collider.tag == "Monster" && isHitAble)
             {
                 player.hp -= (collision.collider.GetComponent<MonsterBase>().Attack - Defecnce);
@@ -180,6 +175,7 @@ namespace JHchoi.Contents
 
             Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(name, player.maxHp, player.hp));
         }
+      
 
         IEnumerator RecoveryTime()
         {

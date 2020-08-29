@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Demon_Monster : NormalMonsterInterface
+    public class Demon_Monster : NormalMonsterBase
     {
         
      

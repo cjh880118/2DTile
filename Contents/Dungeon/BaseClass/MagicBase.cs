@@ -13,9 +13,9 @@ namespace JHchoi.Contents
         private float moveSpeed;
         private float coolTime;
 
-        public int Damage { get => damage; set => damage = value; }
-        public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
-        public float CoolTime { get => coolTime; set => coolTime = value; }
+        public int Damage { get => damage; }// set => damage = value; }
+        public float MoveSpeed { get => moveSpeed; }// set => moveSpeed = value; }
+        public float CoolTime { get => coolTime; }//set => coolTime = value; }
 
         public virtual void InitMagic(int _damage, int _moveSpeed, float _coolTime)
         {

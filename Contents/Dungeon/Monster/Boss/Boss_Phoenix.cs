@@ -5,9 +5,9 @@ using DG.Tweening;
 
 namespace JHchoi.Contents
 {
-    public class Boss_Phoenix : BossMonsterInterface
+    public class Boss_Phoenix : BossMonsterBase
     {
-        delegate void MoveDelegate();
+        delegate IEnumerator MoveDelegate();
         MoveDelegate moveDelegate;
         public GameObject bullet1_Prefab;
         public GameObject bullet2_Prefab;
@@ -17,7 +17,7 @@ namespace JHchoi.Contents
 
         protected override void MoveStart()
         {
-            Move_Pattern_1();
+            StartCoroutine(Move_Pattern_1());
             StartCoroutine(CheckHp());
         }
 
@@ -49,57 +49,96 @@ namespace JHchoi.Contents
         }
 
         //좌우 패트롤
-        protected override void Move_Pattern_1()
+        protected override IEnumerator Move_Pattern_1()
         {
+            Debug.Log("Move_Pattern_1");
             int rndMoveType = Random.Range((int)Ease.Unset, (int)Ease.INTERNAL_Zero);
             int rndLoopCount = Random.Range(0, 4);
             moveDelegate = Move_Pattern_2;
-            gameObject.transform.DOMove(new Vector2(0, 1), 5.0f).SetEase((Ease)rndMoveType).SetLoops(rndLoopCount, LoopType.Yoyo).OnComplete(() => { moveDelegate(); });
+            gameObject.transform.DOMove(new Vector2(0, 2), 5.0f).SetEase((Ease)rndMoveType).SetLoops(rndLoopCount, LoopType.Yoyo).OnComplete(() => { StartCoroutine(moveDelegate()); });
+            yield break;
         }
 
         //중심 회전
-        protected override void Move_Pattern_2()
+        protected override IEnumerator Move_Pattern_2()
         {
+            Debug.Log("Move_Pattern_2");
             StartCoroutine(MoveAround());
+            yield break;
         }
 
         IEnumerator MoveAround()
         {
+            bool isMoveComplete = false;
             float time = 0;
-            while (time > 30)
+            gameObject.transform.DOMove(new Vector2(0, 2), 5.0f).OnComplete(() => { isMoveComplete = true; });
+            int dirNum = Random.Range(0, 2) > 0 ? -1 : 1;
+
+            while (!isMoveComplete)
+                yield return null;
+
+            while (time < 20)
             {
                 time += Time.deltaTime;
                 this.gameObject.transform.rotation = Quaternion.Euler(Vector3.zero);
-                transform.RotateAround(Vector3.zero, Vector3.forward, 20 * Time.deltaTime);
+                transform.RotateAround(Vector3.zero, dirNum * Vector3.forward, 45 * Time.deltaTime);
                 yield return null;
             }
 
-            Move_Pattern_1();
-
+            StartCoroutine(Move_Pattern_3());
         }
 
-        //대각 찌르기
-        protected override void Move_Pattern_3()
+        protected override IEnumerator Move_Pattern_3()
         {
+            bool isMoveComplete = false;
+            int dirNum = Random.Range(0, 2) > 0 ? -1 : 1;
+            gameObject.transform.DOMove(new Vector2(0, -2 * dirNum), 5.0f).OnComplete(() => { isMoveComplete = true; });
+
+            while (!isMoveComplete)
+            {
+                yield return null;
+            }
+
+            Debug.Log("Move_Pattern_3");
+            int rndMoveType = Random.Range((int)Ease.Unset, (int)Ease.INTERNAL_Zero);
+            int rndLoopCount = Random.Range(0, 4);
+            moveDelegate = Move_Pattern_4;
+            gameObject.transform.DOMove(new Vector2(0, 2 * dirNum), 5.0f).SetEase((Ease)rndMoveType).SetLoops(rndLoopCount, LoopType.Yoyo).OnComplete(() => { StartCoroutine(moveDelegate()); });
         }
 
 
-        protected override void Move_Pattern_4()
+        protected override IEnumerator Move_Pattern_4()
         {
+            bool isMoveComplete = false;
+            int dirNum = Random.Range(0, 2) > 0 ? -1 : 1;
+            gameObject.transform.DOMove(new Vector2(4 * dirNum, 0), 3.0f).OnComplete(() => { isMoveComplete = true; });
+
+            while (!isMoveComplete)
+            {
+                yield return null;
+            }
+
+
+            Debug.Log("Move_Pattern_4");
+            int rndMoveType = Random.Range((int)Ease.Unset, (int)Ease.INTERNAL_Zero);
+            int rndLoopCount = Random.Range(0, 4);
+            moveDelegate = Move_Pattern_1;
+            gameObject.transform.DOMove(new Vector2(-4 * dirNum, 0), 5.0f).SetEase((Ease)rndMoveType).SetLoops(rndLoopCount, LoopType.Yoyo).OnComplete(() => { StartCoroutine(moveDelegate()); });
         }
 
-        protected override void Move_Pattern_5()
+        protected override IEnumerator Move_Pattern_5()
         {
+            yield break;
         }
 
-        protected override void Move_Pattern_6()
+        protected override IEnumerator Move_Pattern_6()
         {
+            yield break;
         }
 
 
         protected override void Attack_Pattern_1()
         {
-            Move_Pattern_1();
         }
 
         protected override void Attack_Pattern_2()

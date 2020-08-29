@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Zombie_Monster : NormalMonsterInterface
+    public class Zombie_Monster : NormalMonsterBase
     {
         //public GameObject bullet;
         ////5발 타겟 샷건

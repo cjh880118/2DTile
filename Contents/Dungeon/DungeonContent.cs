@@ -158,6 +158,7 @@ namespace JHchoi.Contents
 
         protected override void OnEnter()
         {
+            UI.IDialog.RequestDialogEnter<UI.BloodDialog>();
             NowMapType = MapType.Stage1_3;
             StartCoroutine(LoadMap(NowMapType, MapMovePointType.End));
         }
