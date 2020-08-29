@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JHchoi.Managers
 {
-    public abstract class IManager : MonoBehaviour
+    public abstract class ManagerBase : MonoBehaviour
     {
         protected List<GameObject> gameObjects = new List<GameObject>();
 

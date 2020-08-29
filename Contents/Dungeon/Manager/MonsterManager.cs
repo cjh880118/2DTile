@@ -8,7 +8,7 @@ using System;
 
 namespace JHchoi.Managers
 {
-    public class MonsterManager : IManager
+    public class MonsterManager : ManagerBase
     {
         Dictionary<MonsterType, GameObject> DicMonsterObject = new Dictionary<MonsterType, GameObject>();
         public delegate void EventHandler(object sender, bool isAllDie);
@@ -22,7 +22,7 @@ namespace JHchoi.Managers
             objMonsters = _monsters;
             for (int i = 0; i < objMonsters.transform.childCount; i++)
             {
-                objMonsters.transform.GetChild(i).GetComponent<IMonster>().EventHitMonster += HitMonsters;
+                objMonsters.transform.GetChild(i).GetComponent<MonsterBase>().EventHitMonster += HitMonsters;
             }
         }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public abstract class IMagic : MonoBehaviour
+    public abstract class MagicBase : MonoBehaviour
     {
         [SerializeField] public Vector3 dirVec;
         [SerializeField] int offset = 10;

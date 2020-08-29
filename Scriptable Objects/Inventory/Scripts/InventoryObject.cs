@@ -72,7 +72,6 @@ namespace JHchoi.Contents
                 }
             }
 
-            //set up functionality for full inventory
             return null;
         }
 
@@ -162,7 +161,7 @@ namespace JHchoi.Contents
     {
         public EquipSlot[] AllowedItems = new EquipSlot[0];
         [System.NonSerialized]
-        public UserInterface parent;
+        public InventoryBase parent;
         [System.NonSerialized]
         public GameObject slotDisplay;
         [System.NonSerialized]

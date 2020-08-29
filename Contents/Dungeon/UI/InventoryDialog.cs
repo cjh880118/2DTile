@@ -11,8 +11,8 @@ namespace JHchoi.UI
 {
     public class InventoryDialog : IDialog
     {
-        [SerializeField] private UserInterface equipmentInventory;
-        [SerializeField] private UserInterface begInvenotry;
+        [SerializeField] private InventoryBase equipmentInventory;
+        [SerializeField] private InventoryBase begInvenotry;
         [SerializeField] private TextMeshProUGUI txtName;
         [SerializeField] private TextMeshProUGUI txtHp;
         [SerializeField] private TextMeshProUGUI txtAttack;

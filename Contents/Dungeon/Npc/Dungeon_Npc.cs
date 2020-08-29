@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Dungeon_Npc : INpc
+    public class Dungeon_Npc : NpcBase
     {
         private void OnTriggerStay2D(Collider2D collision)
         {

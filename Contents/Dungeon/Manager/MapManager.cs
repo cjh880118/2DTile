@@ -9,7 +9,7 @@ using JHchoi.UI.Event;
 
 namespace JHchoi.Managers
 {
-    public class MapManager : IManager
+    public class MapManager : ManagerBase
     {
         private GameObject mapObject;
         private bool isLoadComplete;
@@ -28,7 +28,7 @@ namespace JHchoi.Managers
                 mapObject = Instantiate(o) as GameObject;
                 mapObject.transform.parent = transform;
                 mapObject.name = name;
-                Message.Send<CameraLimitMsg>(new CameraLimitMsg(mapObject.GetComponent<IMap>().GetCameraLimit()));
+                Message.Send<CameraLimitMsg>(new CameraLimitMsg(mapObject.GetComponent<MapBase>().GetCameraLimit()));
 
                 var obj = mapObject.transform.Find("MapMovePoint");
 
@@ -61,32 +61,32 @@ namespace JHchoi.Managers
 
         public bool GetBattlePossible()
         {
-            return mapObject.GetComponent<IMap>().IsBattleMap;
+            return mapObject.GetComponent<MapBase>().IsBattleMap;
         }
 
         public Vector2 GetStartPos()
         {
-            return mapObject.GetComponent<IMap>().StartPos;
+            return mapObject.GetComponent<MapBase>().StartPos;
         }
 
         public Vector2 GetEndPos()
         {
-            return mapObject.GetComponent<IMap>().EndPos;
+            return mapObject.GetComponent<MapBase>().EndPos;
         }
 
         public GameObject GetMonsters()
         {
-            return mapObject.GetComponent<IMap>().Monsters;
+            return mapObject.GetComponent<MapBase>().Monsters;
         }
 
         public GameObject GetNpcs()
         {
-            return mapObject.GetComponent<IMap>().Npcs;
+            return mapObject.GetComponent<MapBase>().Npcs;
         }
 
         public bool GetIsBossMap()
         {
-            return mapObject.GetComponent<IMap>().IsBossMap;
+            return mapObject.GetComponent<MapBase>().IsBossMap;
         }
 
     }

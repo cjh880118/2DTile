@@ -9,7 +9,7 @@ using Attribute = JHchoi.Contents.Attribute;
 
 namespace JHchoi.Managers
 {
-    public class InventoryManager : IManager
+    public class InventoryManager : ManagerBase
     {
         public delegate void SlotUpdated(Attribute[] attributes);
         public event SlotUpdated ItemUpdate;
@@ -17,20 +17,18 @@ namespace JHchoi.Managers
         public delegate void EventHandler(object sender, ConsumeItem e);
         public event EventHandler EvnetUsePotion;
 
-        //public ItemDatabaseObject database;
-
         public InventoryObject inventory;
         public InventoryObject equipment;
         public InventoryObject consume;
 
-        public UserInterface inventoryInterface;
-        public UserInterface inventoryEquipment;
-        public UserInterface inventoryConsume;
+        public InventoryBase inventoryInterface;
+        public InventoryBase inventoryEquipment;
+        public InventoryBase inventoryConsume;
 
         public Attribute[] attributes;
 
-
         GameObject manager;
+
         public override IEnumerator Load_Resource()
         {
             UI.IDialog.RequestDialogEnter<UI.InventoryDialog>();
@@ -45,9 +43,9 @@ namespace JHchoi.Managers
                 equipment.GetSlots[i].OnAfterUpdate += OnAfterSlotUpdate;
             }
 
-            inventoryConsume = GameObject.Find("imgPotion").GetComponent<UserInterface>();
-            inventoryInterface = GameObject.Find("ImgBagInventory").GetComponent<UserInterface>();
-            inventoryEquipment = GameObject.Find("ImgCharacterInventory").GetComponent<UserInterface>();
+            inventoryConsume = GameObject.Find("imgPotion").GetComponent<InventoryBase>();
+            inventoryInterface = GameObject.Find("ImgBagInventory").GetComponent<InventoryBase>();
+            inventoryEquipment = GameObject.Find("ImgCharacterInventory").GetComponent<InventoryBase>();
 
             inventoryConsume.itemDestort += ItemDestory;
             inventoryInterface.itemDestort += ItemDestory;
@@ -66,7 +64,7 @@ namespace JHchoi.Managers
 
         private void ItemDestory(InventoryType type, GameObject obj)
         {
-            UserInterface tempInterface = null;
+            InventoryBase tempInterface = null;
 
             switch (type)
             {
@@ -163,7 +161,7 @@ namespace JHchoi.Managers
 
         private void AddItem(AddItemMsg msg)
         {
-            var item = msg.item.GetComponent<GroundItem>();
+            var item = msg.item.GetComponent<ItemBase>();
 
             if (item)
             {
@@ -246,7 +244,6 @@ namespace JHchoi.Managers
                 }
             }
         }
-
 
         private void OnApplicationQuit()
         {

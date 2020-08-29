@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class World_Map : IMap
+    public class World_Map : MapBase
     {
 
     }

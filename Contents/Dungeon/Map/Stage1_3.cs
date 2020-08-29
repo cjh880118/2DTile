@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class INpc : MonoBehaviour
+    public class Stage1_3 : MapBase
     {
-
+      
+      
     }
 }

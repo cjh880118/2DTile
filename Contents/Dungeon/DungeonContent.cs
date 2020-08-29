@@ -158,7 +158,7 @@ namespace JHchoi.Contents
 
         protected override void OnEnter()
         {
-            NowMapType = MapType.Stage1_1;
+            NowMapType = MapType.Stage1_3;
             StartCoroutine(LoadMap(NowMapType, MapMovePointType.End));
         }
 

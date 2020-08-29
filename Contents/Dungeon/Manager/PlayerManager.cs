@@ -8,11 +8,11 @@ using System;
 
 namespace JHchoi.Managers
 {
-    public class PlayerManager : IManager
+    public class PlayerManager : ManagerBase
     {
         PlayerModel playerModel = Model.First<PlayerModel>();
         GameObject playerObject;
-        public IPlayer player;
+        public PlayerBase player;
         public override IEnumerator Load_Resource()
         {
             string path = "Prefabs/Player/Witch";
@@ -21,7 +21,7 @@ namespace JHchoi.Managers
                 playerObject = Instantiate(o) as GameObject;
                 playerObject.name = "Player";
                 playerObject.transform.parent = transform;
-                player = playerObject.GetComponent<IPlayer>();
+                player = playerObject.GetComponent<PlayerBase>();
                 player.InitIPlayer(
                     playerModel.GetPlayerName(PlayerType.Witch),
                     playerModel.GetPlayerHp(PlayerType.Witch),

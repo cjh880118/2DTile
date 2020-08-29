@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public abstract class IMap : MonoBehaviour
+    public abstract class MapBase : MonoBehaviour
     {
         public MapObject mapObject;
 

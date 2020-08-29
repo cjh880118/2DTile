@@ -12,7 +12,7 @@ namespace JHchoi.UI
     {
         Coroutine corShowMonsterHp;
 
-        [SerializeField] private UserInterface consumeInventory;
+        [SerializeField] private InventoryBase consumeInventory;
         [SerializeField] private Text txtPlayerName;
         [SerializeField] private Image imgPlayerHp;
 

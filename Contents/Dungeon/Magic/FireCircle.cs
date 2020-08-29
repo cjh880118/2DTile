@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class FireCircle : IMagic
+    public class FireCircle : MagicBase
     {
 
     }

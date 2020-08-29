@@ -3,26 +3,25 @@ using JHchoi.UI.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+
+//using UnityEditor.Animations;
+//#endif
 using UnityEngine;
 using Object = System.Object;
 
 namespace JHchoi.Contents
 {
-    public abstract class IMonster : MonoBehaviour
+    public abstract class MonsterBase : MonoBehaviour
     {
         public delegate void EventHandler(Object sender, MonsterInfo monsterInfo);
         public event EventHandler EventHitMonster;
         public MonsterObject monsterObject;
-
-        //public delegate void EventHandlerMonsterDie(object sender, GameObject obj);
-        //public event EventHandlerMonsterDie EventMonsterDie;
-
+        public GameObject bloodPrefab;
         protected Animator anim;
         protected GameObject target;
         protected bool isTargetOn;
         private bool isCollisionable = true;
-        private int hp;
+        protected int hp;
         public int Attack { get => monsterObject.data.Attack; }
 
         private  void Start()
@@ -30,8 +29,9 @@ namespace JHchoi.Contents
             hp = monsterObject.data.Hp;
             target = GameObject.FindGameObjectWithTag("Player");
             anim = GetComponent<Animator>();
+#if UNITY_EDITOR
             anim.runtimeAnimatorController = monsterObject.aniController;
-
+#endif
             MoveStart();
         }
 
@@ -49,7 +49,7 @@ namespace JHchoi.Contents
                 }
                 else
                 {
-                    hp -= collision.collider.GetComponent<IMagic>().Damage;
+                    hp -= collision.collider.GetComponent<MagicBase>().Damage;
                     Destroy(collision.collider.gameObject);
                     StartCoroutine(HItDelay());
                     Message.Send<UIMonsterHpMsg>(new UIMonsterHpMsg(monsterObject.data.Name, monsterObject.data.Hp, hp));
@@ -57,6 +57,8 @@ namespace JHchoi.Contents
 
                     if (hp <= 0)
                     {
+                        var o = Instantiate(bloodPrefab, transform.position, Quaternion.identity);
+                        o.transform.SetParent(this.transform.parent);
                         Message.Send<DropItemMsg>(new DropItemMsg(transform.position));
                         EventHitMonster?.Invoke(this, new MonsterInfo(this.gameObject, hp));
                     }

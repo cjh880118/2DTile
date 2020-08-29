@@ -88,7 +88,7 @@ namespace JHchoi.Contents
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            var item = collision.GetComponent<GroundItem>();
+            var item = collision.GetComponent<ItemBase>();
             if (item)
             {
                 Item _item = new Item(item.item);

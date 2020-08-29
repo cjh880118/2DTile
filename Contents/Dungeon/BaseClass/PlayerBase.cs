@@ -24,7 +24,7 @@ namespace JHchoi.Contents
         public float ItemMoveSpeed;
     }
 
-    public abstract class IPlayer : MonoBehaviour
+    public abstract class PlayerBase : MonoBehaviour
     {
         public delegate void EventHandler(object sender, EventArgs e);
         public event EventHandler EvnetPlayerDie;
@@ -69,7 +69,7 @@ namespace JHchoi.Contents
         }
         public float MoveSpeed { get => player.moveSpeed + playerItem.ItemMoveSpeed; }
         public bool IsBattleOn { get => isBattleOn; set => isBattleOn = value; }
-        public string Name { get => name; }
+        public string Name { get => player.name; }
         public int TotalAttack { get => player.attack + playerItem.ItemAttack; }
         public int MaxHp { get => player.maxHp; }
         public bool IsInventoryOpen { get => isInventoryOpen; set => isInventoryOpen = value; }
@@ -147,14 +147,14 @@ namespace JHchoi.Contents
 
             if (collision.collider.tag == "Monster" && isHitAble)
             {
-                player.hp -= (collision.collider.GetComponent<IMonster>().Attack - Defecnce);
+                player.hp -= (collision.collider.GetComponent<MonsterBase>().Attack - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
             }
 
             if (collision.collider.tag == "MonsterBullet" && isHitAble)
             {
-                player.hp -= (collision.collider.GetComponent<IMagic>().Damage - Defecnce);
+                player.hp -= (collision.collider.GetComponent<MagicBase>().Damage - Defecnce);
                 Message.Send<BloodEffectMsg>(new BloodEffectMsg());
                 StartCoroutine(RecoveryTime());
                 Destroy(collision.collider.gameObject);

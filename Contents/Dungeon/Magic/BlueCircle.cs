@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class BlueCircle : IMagic
+    public class BlueCircle : MagicBase
     {
 
     }

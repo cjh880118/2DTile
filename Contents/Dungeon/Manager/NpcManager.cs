@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Managers
 {
-    public class NpcManager : IManager
+    public class NpcManager : ManagerBase
     {
         public override IEnumerator Load_Resource()
         {

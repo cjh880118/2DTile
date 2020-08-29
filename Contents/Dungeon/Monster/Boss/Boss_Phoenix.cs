@@ -12,11 +12,40 @@ namespace JHchoi.Contents
         public GameObject bullet1_Prefab;
         public GameObject bullet2_Prefab;
         public GameObject bullet3_Prefab;
+        Coroutine MoveCor;
+        Coroutine AttackCor;
 
         protected override void MoveStart()
         {
             Move_Pattern_1();
-            StartCoroutine(CircleShoot());
+            StartCoroutine(CheckHp());
+        }
+
+        IEnumerator CheckHp()
+        {
+            AttackCor = StartCoroutine(ShotGun());
+
+            while (hp > monsterObject.data.Hp / 2)
+            {
+                yield return null;
+            }
+
+            StopCoroutine(AttackCor);
+            AttackCor = StartCoroutine(CircleShoot());
+
+            while (hp > monsterObject.data.Hp / 3)
+            {
+                yield return null;
+            }
+
+            StopCoroutine(AttackCor);
+            StartCoroutine(AroundShoot(60));
+            StartCoroutine(AroundShoot(120));
+            StartCoroutine(AroundShoot(180));
+            StartCoroutine(AroundShoot(240));
+            StartCoroutine(AroundShoot(300));
+            StartCoroutine(AroundShoot(360));
+
         }
 
         //좌우 패트롤
@@ -26,25 +55,27 @@ namespace JHchoi.Contents
             int rndLoopCount = Random.Range(0, 4);
             moveDelegate = Move_Pattern_2;
             gameObject.transform.DOMove(new Vector2(0, 1), 5.0f).SetEase((Ease)rndMoveType).SetLoops(rndLoopCount, LoopType.Yoyo).OnComplete(() => { moveDelegate(); });
-
         }
 
         //중심 회전
         protected override void Move_Pattern_2()
         {
             StartCoroutine(MoveAround());
-            Debug.Log("움직임 패턴2");
-
         }
 
         IEnumerator MoveAround()
         {
-            while (true)
+            float time = 0;
+            while (time > 30)
             {
+                time += Time.deltaTime;
                 this.gameObject.transform.rotation = Quaternion.Euler(Vector3.zero);
                 transform.RotateAround(Vector3.zero, Vector3.forward, 20 * Time.deltaTime);
                 yield return null;
             }
+
+            Move_Pattern_1();
+
         }
 
         //대각 찌르기
@@ -100,9 +131,9 @@ namespace JHchoi.Contents
                 {
                     float theta = startAngle + step * (float)i;
                     var magic = Instantiate(bullet1_Prefab, transform.position, Quaternion.identity) as GameObject;
-                    magic.GetComponent<IMagic>().InitMagic(15, 5, 5);
+                    magic.GetComponent<MagicBase>().InitMagic(15, 5, 5);
                     theta *= Mathf.Deg2Rad;
-                    magic.GetComponent<IMagic>().Shoot(new Vector2(3 * Mathf.Cos(theta), 3 * Mathf.Sin(theta)));
+                    magic.GetComponent<MagicBase>().Shoot(new Vector2(3 * Mathf.Cos(theta), 3 * Mathf.Sin(theta)));
                 }
 
                 yield return new WaitForSeconds(0.5f);
@@ -124,9 +155,9 @@ namespace JHchoi.Contents
                 {
                     float theta = startAngle + step * (float)i;
                     var magic = Instantiate(bullet2_Prefab, transform.position, Quaternion.identity) as GameObject;
-                    magic.GetComponent<IMagic>().InitMagic(15, 5, 5);
+                    magic.GetComponent<MagicBase>().InitMagic(15, 5, 5);
                     theta *= Mathf.Deg2Rad;
-                    magic.GetComponent<IMagic>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
+                    magic.GetComponent<MagicBase>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
                 }
 
                 startAngle += 15;
@@ -138,15 +169,16 @@ namespace JHchoi.Contents
         IEnumerator AroundShoot(float theta)
         {
             int count = 30;
+
             while (true)
             {
                 theta += 10;
                 var magic = Instantiate(bullet3_Prefab, transform.position, Quaternion.identity) as GameObject;
                 theta *= Mathf.Deg2Rad;
-                magic.GetComponent<IMagic>().InitMagic(15, 10, 5);
-                magic.GetComponent<IMagic>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
+                magic.GetComponent<MagicBase>().InitMagic(15, 3, 5);
+                magic.GetComponent<MagicBase>().Shoot(new Vector2(Mathf.Cos(theta), Mathf.Sin(theta)));
                 theta *= Mathf.Rad2Deg;
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.07f);
             }
         }
     }

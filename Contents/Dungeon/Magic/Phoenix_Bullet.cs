@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Phoenix_Bullet : IMagic
+    public class Phoenix_Bullet : MagicBase
     {
 
     }

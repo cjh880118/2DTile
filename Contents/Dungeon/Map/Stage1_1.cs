@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHchoi.Contents
 {
-    public class Stage1_1 : IMap
+    public class Stage1_1 : MapBase
     {
     }
 }

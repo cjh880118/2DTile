@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 570c2cea8065a7149b4fd08d671c70cc, type: 3}
+  m_Name: Stage1_1
+  m_EditorClassIdentifier: 
+  mapType: 0
+  startPos: {x: -26.15, y: -1.8}
+  endPos: {x: -11.5, y: 6}
+  isBattleAble: 1
+  CameraLimit:
+    Camera_Min_X: -22
+    Camera_Max_X: 0
+    Camera_Min_Y: -8
+    Camera_Max_Y: 3
