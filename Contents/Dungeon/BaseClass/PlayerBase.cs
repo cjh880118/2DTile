@@ -137,8 +137,8 @@ namespace JHchoi.Contents
         protected abstract void Skill_3(Vector2 _dir);
         protected abstract void OnShield();
 
-
-        private void OnCollisionEnter2D(Collision2D collision)
+    
+        private void OnCollisionStay2D(Collision2D collision)
         {
             if (collision.collider.tag == "Monster" && isHitAble)
             {

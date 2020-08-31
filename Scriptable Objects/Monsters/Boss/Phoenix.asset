@@ -15,7 +15,7 @@ MonoBehaviour:
   monsterType: 3
   data:
     Name: Phoenix
-    Hp: 7000
+    Hp: 3000
     MoveSpeed: 10
     Attack: 3
   aniController: {fileID: 9100000, guid: 38886f5d574973941addf6781f5354fe, type: 2}
