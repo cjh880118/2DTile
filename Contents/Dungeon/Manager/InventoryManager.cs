@@ -180,7 +180,6 @@ namespace JHchoi.Managers
                             }
                         }
                     }
-
                     Destroy(msg.item);
                 }
             }
@@ -208,7 +207,6 @@ namespace JHchoi.Managers
 
         public void UseItem()
         {
-
             for (int i = 0; i < consume.GetSlots.Length; i++)
             {
                 if (consume.GetSlots[i].ItemObject == null)

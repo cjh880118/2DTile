@@ -89,5 +89,10 @@ namespace JHchoi.Managers
             return mapObject.GetComponent<MapBase>().IsBossMap;
         }
 
+        public Grid GetGrid()
+        {
+            return mapObject.GetComponent<MapBase>().Grid;
+        }
+
     }
 }

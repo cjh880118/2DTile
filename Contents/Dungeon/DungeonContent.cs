@@ -220,7 +220,7 @@ namespace JHchoi.Contents
             if (mapManager.GetMonsters() != null)
                 mapManager.GetMonsters().transform.parent = monsterManager.gameObject.transform;
 
-            monsterManager.Init_Monster(mapManager.GetMonsters());
+            monsterManager.Init_Monster(mapManager.GetMonsters(), mapManager.GetGrid());
 
             Vector2 startPos;
             if (_pointType == MapMovePointType.End)

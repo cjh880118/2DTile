@@ -22,16 +22,23 @@ namespace JHchoi.Contents
         protected bool isTargetOn;
         private bool isCollisionable = true;
         protected int hp;
+        protected Astar2D astar2D;
+        protected Grid grid;
         public int Attack { get => monsterObject.data.Attack; }
-
-        private  void Start()
+      
+        public void InitMonster(Astar2D astar, Grid _grid)
         {
+            //astar2D = new Astar2D();
+            grid = _grid;
             hp = monsterObject.data.Hp;
             target = GameObject.FindGameObjectWithTag("Player");
             anim = GetComponent<Animator>();
 #if UNITY_EDITOR
             anim.runtimeAnimatorController = monsterObject.aniController;
 #endif
+            astar2D = astar;
+
+
             MoveStart();
         }
 
