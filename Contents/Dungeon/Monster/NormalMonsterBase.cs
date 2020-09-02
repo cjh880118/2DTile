@@ -36,13 +36,12 @@ namespace JHchoi.Contents
             {
                 Vector2Int startVec = new Vector2Int(grid.WorldToCell(transform.position).x, grid.WorldToCell(transform.position).y);
                 Vector2Int targetVec = new Vector2Int(grid.WorldToCell(target.transform.position).x, grid.WorldToCell(target.transform.position).y);
-
                 NodeList = astar2D.PathFinding(startVec, targetVec);
                 index = 0;
                 isTargetOn = true;
                 anim.SetBool("isTargetOn", isTargetOn);
 
-                test = StartCoroutine(ReTarget());
+                //test = StartCoroutine(ReTarget());
             }
         }
         Coroutine test;
@@ -65,7 +64,7 @@ namespace JHchoi.Contents
         {
             if (collision.gameObject.tag == "Player")
             {
-                StopCoroutine(test);
+                //StopCoroutine(test);
                 isTargetOn = false;
                 anim.SetBool("isTargetOn", isTargetOn);
             }
