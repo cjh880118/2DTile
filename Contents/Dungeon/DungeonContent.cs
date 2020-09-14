@@ -100,15 +100,25 @@ namespace JHchoi.Contents
             SetLoadComplete();
         }
 
-        private void MapMove(UnityEngine.Object sender, MapMovePointType type)
+        private void MapMove(object sender, EventMapMove e)
         {
-            if (type == MapMovePointType.End)
+            if (e.type == MapMovePointType.End)
                 NowMapType++;
             else
                 NowMapType--;
 
-            StartCoroutine(LoadMap(NowMapType, type));
+            StartCoroutine(LoadMap(NowMapType, e.type));
         }
+
+        //private void MapMove(UnityEngine.Object sender, MapMovePointType type)
+        //{
+        //    if (type == MapMovePointType.End)
+        //        NowMapType++;
+        //    else
+        //        NowMapType--;
+
+        //    StartCoroutine(LoadMap(NowMapType, type));
+        //}
 
 
         private void ItemUpdate(Managers.Attribute[] attributes)

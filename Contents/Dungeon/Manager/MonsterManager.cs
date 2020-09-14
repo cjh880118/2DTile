@@ -34,13 +34,12 @@ namespace JHchoi.Managers
             }
         }
 
-
-        private void HitMonsters(object sender, MonsterInfo _info)
+        private void HitMonsters(object sender, EventMonsterHit e)
         {
-            if (_info.hp > 0)
+            if (e.hp > 0)
                 EventMonsterHit?.Invoke(this, false);
             else
-                StartCoroutine(MonsterCountCheck(_info.objMonster));
+                StartCoroutine(MonsterCountCheck(e.monster));
         }
 
         IEnumerator MonsterCountCheck(GameObject obj)

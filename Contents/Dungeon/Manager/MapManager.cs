@@ -9,13 +9,25 @@ using JHchoi.UI.Event;
 
 namespace JHchoi.Managers
 {
+    public class EventMapMove : EventArgs
+    {
+        public object sender;
+        public MapMovePointType type;
+        public EventMapMove(object sender, MapMovePointType type)
+        {
+            this.sender = sender;
+            this.type = type;
+        }
+    }
+
+
     public class MapManager : ManagerBase
     {
         private GameObject mapObject;
         private bool isLoadComplete;
         public bool IsLoadComplete { get => isLoadComplete; }
-        public delegate void EventHandler(UnityEngine.Object sender, MapMovePointType type);
-        public event EventHandler EvnetMapMove;
+        //public delegate void EventHandler(UnityEngine.Object sender, MapMovePointType type);
+        public event EventHandler<EventMapMove> EvnetMapMove;
 
         public override IEnumerator Load_Resource(string name)
         {
@@ -50,7 +62,7 @@ namespace JHchoi.Managers
 
         private void MoveMapEvent(object sender, MapMovePointType type)
         {
-            EvnetMapMove?.Invoke(this, type);
+            EvnetMapMove?.Invoke(this, new EventMapMove(this, type));
         }
 
         public void ClearMap()
