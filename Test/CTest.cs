@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void EventHandler(int a);
+//public delegate void EventHandler(int a);
 public class CTest : MonoBehaviour
 {
     TstClass tstClass;
@@ -20,8 +20,8 @@ public class CTest : MonoBehaviour
     void Start()
     {
         tstClass = new TstClass();
-        tstClass.happen += Evnt;
-        a += ee;
+        //tstClass.happen += Evnt;
+        //a += ee;
     }
 
     private void ee(int a)
@@ -55,7 +55,7 @@ public class CTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             tstClass.EvnetTest();
-            a.BeginInvoke(1, callBack, this);
+            //a.BeginInvoke(1, callBack, this);
         }
     }
 }
@@ -65,6 +65,6 @@ public class TstClass
     public event EventHandler happen;
     public void EvnetTest()
     {
-        happen(1);
+        //happen(1);
     }
 }

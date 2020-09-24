@@ -26,9 +26,7 @@ namespace JHchoi.Contents
 
     public abstract class PlayerBase : MonoBehaviour
     {
-        public delegate void EventHandler(object sender, EventArgs e);
-        public event EventHandler EvnetPlayerDie;
-
+        public event EventHandler OnPlayerDie;
         delegate void Use_Skill(Vector2 dir);
         private PlayerStatus player = new PlayerStatus();
         private ItemStatus playerItem = new ItemStatus();
@@ -170,7 +168,7 @@ namespace JHchoi.Contents
             if (player.hp <= 0)
             {
                 Debug.Log("Game Over");
-                EvnetPlayerDie?.Invoke(this, new EventArgs());
+                OnPlayerDie?.Invoke(this, EventArgs.Empty);
             }
 
             Message.Send<UIPlayerHpMsg>(new UIPlayerHpMsg(name, player.maxHp, player.hp));

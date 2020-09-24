@@ -13,8 +13,20 @@ namespace JHchoi.Contents
 {
     public abstract class InventoryBase : MonoBehaviour
     {
-        public delegate void ItemDestory(InventoryType type, GameObject obj);
-        public event ItemDestory itemDestort;
+        public class ItemDestoryEventArgs : EventArgs
+        {
+            public InventoryType inventoryType;
+            public GameObject item;
+
+            public ItemDestoryEventArgs(InventoryType _inventoryType, GameObject _item)
+            {
+                inventoryType = _inventoryType;
+                item = _item;
+            }
+        }
+
+        //public delegate void ItemDestory(InventoryType type, GameObject obj);
+        public event EventHandler<ItemDestoryEventArgs> OnItemDestory;
         public InventoryObject inventory;
         public Dictionary<GameObject, InventorySlot> slotsOnInterface = new Dictionary<GameObject, InventorySlot>();
 
@@ -82,10 +94,10 @@ namespace JHchoi.Contents
             if (slotsOnInterface[obj].item.Id >= 0)
             {
                 tempItem = new GameObject();
-                var rt = tempItem.AddComponent<RectTransform>();
+                RectTransform rt = tempItem.AddComponent<RectTransform>();
                 rt.sizeDelta = new Vector2(50, 50);
                 tempItem.transform.SetParent(transform.parent);
-                var img = tempItem.AddComponent<Image>();
+                Image img = tempItem.AddComponent<Image>();
                 img.sprite = slotsOnInterface[obj].ItemObject.uiDisplay;
                 img.raycastTarget = false;
             }
@@ -97,10 +109,10 @@ namespace JHchoi.Contents
         public void OnDragEnd(GameObject obj)
         {
             Destroy(MouseData.tempItemBegingDragged);
-            
+
             if (MouseData.interfaceMouseIsOver == null || slotsOnInterface[obj].parent.inventory.type == InventoryType.Consume)
             {
-                itemDestort(inventory.type, obj);
+                OnItemDestory?.Invoke(this, new ItemDestoryEventArgs(inventory.type, obj));
                 return;
             }
 

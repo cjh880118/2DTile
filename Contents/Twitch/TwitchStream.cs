@@ -40,15 +40,15 @@ public class TwitchStream : MonoBehaviour
         twitchIRC.messageRecievedEvent.AddListener(TwitchMessageReceive);
 
         
-        StartCoroutine(TwitchConnect());
+        //StartCoroutine(TwitchConnect());
     }
 
     IEnumerator TwitchConnect()
     {
         while (true)
         {
-            //string url = "http://tmi.twitch.tv/group/user/yanggang0118/chatters";
-            string url = "http://tmi.twitch.tv/group/user/rudbeckia7/chatters";
+            string url = "http://tmi.twitch.tv/group/user/yanggang0118/chatters";
+            //string url = "http://tmi.twitch.tv/group/user/rudbeckia7/chatters";
             string jsonData = webTwitchClient.DownloadString(url);
 
 

@@ -47,9 +47,9 @@ namespace JHchoi.Managers
             inventoryInterface = GameObject.Find("ImgBagInventory").GetComponent<InventoryBase>();
             inventoryEquipment = GameObject.Find("ImgCharacterInventory").GetComponent<InventoryBase>();
 
-            inventoryConsume.itemDestort += ItemDestory;
-            inventoryInterface.itemDestort += ItemDestory;
-            inventoryEquipment.itemDestort += ItemDestory;
+            inventoryConsume.OnItemDestory += Inventorye_OnItemDestory;       
+            inventoryInterface.OnItemDestory += Inventorye_OnItemDestory; ;
+            inventoryEquipment.OnItemDestory += Inventorye_OnItemDestory; ;
 
 
             UI.IDialog.RequestDialogExit<UI.InventoryDialog>();
@@ -62,11 +62,11 @@ namespace JHchoi.Managers
             yield return null;
         }
 
-        private void ItemDestory(InventoryType type, GameObject obj)
+        private void Inventorye_OnItemDestory(object sender, InventoryBase.ItemDestoryEventArgs e)
         {
             InventoryBase tempInterface = null;
 
-            switch (type)
+            switch (e.inventoryType)
             {
                 case InventoryType.Inventory:
                     tempInterface = inventoryInterface;
@@ -81,19 +81,20 @@ namespace JHchoi.Managers
                     break;
             }
 
-            if (type == InventoryType.Inventory)
+            if (e.inventoryType == InventoryType.Inventory)
             {
                 for (int i = 0; i < consume.GetSlots.Length; i++)
                 {
-                    if (consume.GetSlots[i].item == inventoryInterface.slotsOnInterface[obj].item)
+                    if (consume.GetSlots[i].item == inventoryInterface.slotsOnInterface[e.item].item)
                         return;
                 }
             }
-            else if (type == InventoryType.Equipment)
+            else if (e.inventoryType == InventoryType.Equipment)
                 return;
 
-            tempInterface.slotsOnInterface[obj].RemoveItem();
+            tempInterface.slotsOnInterface[e.item].RemoveItem();
         }
+
 
         public void OnBeforeSlotUpdate(InventorySlot _slot)
         {
@@ -156,7 +157,6 @@ namespace JHchoi.Managers
         {
             Message.AddListener<DropItemMsg>(DropItem);
             Message.AddListener<AddItemMsg>(AddItem);
-
         }
 
         private void AddItem(AddItemMsg msg)

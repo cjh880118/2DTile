@@ -10,15 +10,10 @@ public class GameObjectController : MonoBehaviour
     public GameObject Mace;
     Vector2 vec2MacePos;
     public GameObject[] players;
-
+    public event Action CharacterDie;
     private void Start()
     {
         vec2MacePos = Mace.transform.position;
-    }
-
-    private void PlayerDie()
-    {
-        throw new NotImplementedException();
     }
 
     public void GeneratePlayer()
@@ -26,6 +21,20 @@ public class GameObjectController : MonoBehaviour
         float posX = UnityEngine.Random.Range(-6, 6);
         var player = PhotonNetwork.Instantiate("Prefabs/Photon/PhotonPlayer", new Vector2(posX,-1), Quaternion.identity);
         player.transform.parent = transform;
+    }
+
+    public void GameStart()
+    {
+        foreach (var players in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            players.GetComponent<PhotonPlayer>().EventDie += PlayerDie;
+        }
+    }
+    private void PlayerDie()
+    {
+        CharacterDie?.Invoke();
+        //inGameDialog.SetGameOverPannel(true);
+        Debug.Log("나 죽음");
     }
 
     public int GetSuvivePlayerCount()

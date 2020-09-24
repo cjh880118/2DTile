@@ -25,10 +25,6 @@ public class QuizModel
             var index = fileData.GetEqualsIndex("Index", o);
             var problem = fileData.GetValue("Problem", index);
             var answer = fileData.GetValue("Answer", index);
-
-            //byte[] bytes = Encoding.Default.GetBytes(problem);
-            //problem = Encoding.UTF8.GetString(bytes);
-
             problems.Add(index, problem);
             answers.Add(index, Convert.ToBoolean(answer));
         }

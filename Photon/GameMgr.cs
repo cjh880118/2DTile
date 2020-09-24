@@ -35,8 +35,10 @@ public class GameMgr : MonoBehaviour
         NetworkManager.Instance.EventRoomList += RoomList;
         NetworkManager.Instance.EventMasterChange += MasterChange;
         roomDialog.EventButton += EventPlayerReady;
+        objController.CharacterDie += PlayerDie;
         NetworkManager.Instance.Connect();
     }
+
 
     void ProblemSelect()
     {
@@ -102,6 +104,11 @@ public class GameMgr : MonoBehaviour
 
             ProblemSelect();
         }
+    }
+
+    public void GameStart()
+    {
+
     }
 
     void GameOver()
@@ -228,6 +235,8 @@ public class GameMgr : MonoBehaviour
         pv.RPC("RPC_PlayerCountUpdate", RpcTarget.All, PlayerReady);
     }
 
+
+ 
     private void PlayerDie()
     {
         inGameDialog.SetGameOverPannel(true);
@@ -249,10 +258,7 @@ public class GameMgr : MonoBehaviour
     {
         roomDialog.gameObject.SetActive(false);
         inGameDialog.gameObject.SetActive(true);
-        foreach (var players in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            players.GetComponent<PhotonPlayer>().EventDie += PlayerDie;
-        }
+        objController.GameStart();
 
         if (PhotonNetwork.IsMasterClient)
         {

@@ -93,7 +93,7 @@ namespace JHchoi.Contents
             //Event
             mapManager.EvnetMapMove += MapMove;
             monsterManager.EventMonsterHit += MonsterHit;
-            playerManager.player.EvnetPlayerDie += PlayerDie;
+            playerManager.player.OnPlayerDie += PlayerDie;
             inventoryManager.ItemUpdate += ItemUpdate;
             inventoryManager.EvnetUsePotion += UsePotion;
 

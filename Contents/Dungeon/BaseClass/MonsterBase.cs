@@ -27,9 +27,7 @@ namespace JHchoi.Contents
 
     public abstract class MonsterBase : MonoBehaviour
     {
-        //public delegate void EventHandler(Object sender, MonsterInfo monsterInfo);
         public event EventHandler<EventMonsterHit> EventHitMonster;
-
         public MonsterObject monsterObject;
         public GameObject bloodPrefab;
         protected Animator anim;

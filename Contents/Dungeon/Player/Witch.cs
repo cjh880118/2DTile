@@ -11,6 +11,14 @@ namespace JHchoi.Contents
         public GameObject MagicBallPrefab;
         public GameObject BlueCirclePrefab;
         public GameObject Shield;
+        private Camera mainCamera;
+        private PlayerAnimation playerAnimation;
+
+        private void Awake()
+        {
+            mainCamera = Camera.main;
+            playerAnimation = transform.Find("Witch Sprite").GetComponent<PlayerAnimation>();
+        }
 
         protected override void OnShield()
         {
@@ -35,13 +43,13 @@ namespace JHchoi.Contents
 
             Vector2 dirVec = _dir.normalized;
 
-            FindObjectOfType<PlayerAnimation>().SetDirection(Vector2.zero, _dir);
+            playerAnimation.SetDirection(Vector2.zero, _dir);
 
-            var fireCircle = Instantiate(FireCirclePrefab) as GameObject;
-            fireCircle.transform.position = transform.position;
-            fireCircle.GetComponent<MagicBase>().InitMagic(10 + TotalAttack, 20, 0.1f);
-            fireCircle.GetComponent<MagicBase>().Shoot(dirVec);
-            StartCoroutine(CoolTimeCheck(fireCircle.GetComponent<MagicBase>().CoolTime, 0));
+            GameObject fireCircle = Instantiate(FireCirclePrefab, transform.position, Quaternion.identity);
+            MagicBase fireCircleBase = fireCircle.GetComponent<MagicBase>();
+            fireCircleBase.InitMagic(10 + TotalAttack, 20, 0.1f);
+            fireCircleBase.Shoot(dirVec);
+            StartCoroutine(CoolTimeCheck(fireCircleBase.CoolTime, 0));
         }
 
 
@@ -55,21 +63,21 @@ namespace JHchoi.Contents
             float angle = 30;
             float step = angle / (count - 1);
 
-            Vector2 dirVec = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y)) - this.gameObject.transform.position;
+            Vector2 dirVec = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y)) - this.gameObject.transform.position;
             float atan = Mathf.Atan2(dirVec.x, dirVec.y);
             float startAngle = -angle / 2 - (atan * Mathf.Rad2Deg - 90);
 
-            FindObjectOfType<PlayerAnimation>().SetDirection(Vector2.zero, _dir);
+            playerAnimation.SetDirection(Vector2.zero, _dir);
 
             for (int i = 0; i < count; i++)
             {
                 float theta = startAngle + step * (float)i;
-                var magicBall = Instantiate(MagicBallPrefab) as GameObject;
-                magicBall.transform.position = transform.position;
+                GameObject magicBall = Instantiate(MagicBallPrefab, transform.position, Quaternion.identity);
+                MagicBase magicBallBase = magicBall.GetComponent<MagicBase>();
                 theta *= Mathf.Deg2Rad;
-                magicBall.GetComponent<MagicBase>().InitMagic(5 + TotalAttack, 25, 0.3f);
-                magicBall.GetComponent<MagicBase>().Shoot(new Vector2(3 * Mathf.Cos(theta), 3 * Mathf.Sin(theta)));
-                cooltime = magicBall.GetComponent<MagicBase>().CoolTime;
+                magicBallBase.InitMagic(5 + TotalAttack, 25, 0.3f);
+                magicBallBase.Shoot(new Vector2(3 * Mathf.Cos(theta), 3 * Mathf.Sin(theta)));
+                cooltime = magicBallBase.CoolTime;
             }
 
             StartCoroutine(CoolTimeCheck(cooltime, 1));
@@ -82,12 +90,12 @@ namespace JHchoi.Contents
 
             Vector2 dirVec = _dir.normalized;
 
-            FindObjectOfType<PlayerAnimation>().SetDirection(Vector2.zero, _dir);
-            var blueCircle = Instantiate(BlueCirclePrefab) as GameObject;
-            blueCircle.transform.position = this.gameObject.transform.position;
-            blueCircle.GetComponent<MagicBase>().InitMagic(30 + TotalAttack, 15, 0.5f);
-            blueCircle.GetComponent<MagicBase>().Shoot(dirVec);
-            StartCoroutine(CoolTimeCheck(blueCircle.GetComponent<MagicBase>().CoolTime, 2));
+            playerAnimation.SetDirection(Vector2.zero, _dir);
+            GameObject blueCircle = Instantiate(BlueCirclePrefab, transform.position, Quaternion.identity);
+            MagicBase blueCircleBase = blueCircle.GetComponent<MagicBase>();
+            blueCircleBase.InitMagic(30 + TotalAttack, 15, 0.5f);
+            blueCircleBase.Shoot(dirVec);
+            StartCoroutine(CoolTimeCheck(blueCircleBase.CoolTime, 2));
         }
 
 
